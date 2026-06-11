@@ -24,15 +24,11 @@ CREATE TABLE oauth_clients (
 
 CREATE TABLE oauth_tokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    client_id INT NOT NULL,
+    client_id VARCHAR(100) NULL,
     user_id INT NULL,
     access_token TEXT NOT NULL,
     refresh_token TEXT,
-    expires_at DATETIME NOT NULL,
-    CONSTRAINT fk_oauth_client
-        FOREIGN KEY (client_id)
-        REFERENCES oauth_clients(id)
-        ON DELETE CASCADE
+    expires_at DATETIME NOT NULL
 ) ENGINE=InnoDB;
 
 -- 3. CITIZEN SERVICE
