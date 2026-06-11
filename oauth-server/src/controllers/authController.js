@@ -46,7 +46,7 @@ const passwordGrant = async (req, res) => {
 
   try {
     const [rows] = await pool.execute(
-      'SELECT * FROM citizens WHERE email = ? OR nik = ?',
+      'SELECT * FROM citizen_citizens WHERE email = ? OR nik = ?',
       [username, username]
     );
 
@@ -128,7 +128,7 @@ const refreshTokenGrant = async (req, res) => {
     const tokenData = rows[0];
 
     const [userRows] = await pool.execute(
-      'SELECT * FROM citizens WHERE id = ?',
+      'SELECT * FROM citizen_citizens WHERE id = ?',
       [tokenData.user_id]
     );
 
