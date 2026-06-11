@@ -177,3 +177,21 @@ CREATE TABLE env_ml_predictions (
         REFERENCES zones(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- 6. INDEXES 
+
+CREATE INDEX idx_citizen_reports_status ON citizen_reports(status);
+CREATE INDEX idx_citizen_reports_zone ON citizen_reports(zone_id);
+
+CREATE INDEX idx_traffic_roads_zone ON traffic_roads(zone_id);
+CREATE INDEX idx_traffic_readings_road ON traffic_readings(road_id);
+CREATE INDEX idx_traffic_readings_recorded ON traffic_readings(recorded_at);
+CREATE INDEX idx_traffic_incidents_road ON traffic_incidents(road_id);
+CREATE INDEX idx_env_sensor_readings_zone ON env_sensor_readings(zone_id);
+CREATE INDEX idx_env_sensor_readings_recorded ON env_sensor_readings(recorded_at);
+CREATE INDEX idx_env_alerts_zone ON env_alerts(zone_id);
+CREATE INDEX idx_env_ml_predictions_zone ON env_ml_predictions(zone_id);
+
+-- Composite Indexes khusus akselerasi kueri ML Malam-Subuh hari
+CREATE INDEX idx_nocturnal_traffic ON traffic_readings(road_id, recorded_at);
+CREATE INDEX idx_nocturnal_env ON env_sensor_readings(zone_id, recorded_at);
