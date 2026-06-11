@@ -42,6 +42,7 @@ CREATE TABLE citizen_citizens (
     nik VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE,
+    password VARCHAR(255) NOT NULL DEFAULT '$2b$10$EPF96bA/f.ZqE7nfxbN7E.S1S0P3E8yM1kQ2w3e4r5t6y7u8i9o0p', -- Default hash 'password123'
     phone VARCHAR(20),
     zone_id INT,
     role ENUM('citizen', 'admin') DEFAULT 'citizen',
