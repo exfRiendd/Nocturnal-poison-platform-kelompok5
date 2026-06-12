@@ -11,3 +11,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/roads', [TrafficController::class, 'roads']);
 
 Route::get('/roads/{id}', [TrafficController::class, 'showRoad']);
+
+Route::get('/traffic/latest', [TrafficController::class, 'latestTraffic']);
