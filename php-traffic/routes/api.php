@@ -9,3 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/roads', [TrafficController::class, 'roads']);
+
+Route::get('/roads/{id}', [TrafficController::class, 'showRoad']);

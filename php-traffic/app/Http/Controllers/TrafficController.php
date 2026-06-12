@@ -13,4 +13,16 @@ class TrafficController extends Controller
             TrafficRoad::all()
         );
     }
+
+    public function showRoad($id)
+    {
+        $road = TrafficRoad::find($id);
+        if (!$road) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data jalan tidak ditemukan'
+            ], 404);
+        }
+        return response()->json($road);
+    }
 }
