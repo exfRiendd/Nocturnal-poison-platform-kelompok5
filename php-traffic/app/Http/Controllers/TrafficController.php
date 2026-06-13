@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class TrafficController extends Controller
 {
-    
+    // 1. GET /api/roads
     public function roads()
     {
         return response()->json(
@@ -16,6 +16,7 @@ class TrafficController extends Controller
         );
     }
 
+    // 2. GET /api/roads/{id}
     public function showRoad($id)
     {
         $road = TrafficRoad::find($id);
@@ -28,6 +29,7 @@ class TrafficController extends Controller
         return response()->json($road);
     }
 
+    // 3. GET /api/traffic/latest
     public function latestTraffic()
     {
         $latestReadings = DB::table('traffic_readings as tr')
@@ -49,5 +51,26 @@ class TrafficController extends Controller
 
         return response()->json($latestReadings, 200);
     }
+    
+    // 4. GET /api/traffic/history/{roadId}
+    public function trafficHistory($roadId)
+    {
+        $roadExists = TrafficRoad::find($roadId);
+        if (!$roadExists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data jalan tidak ditemukan'
+            ], 404);
+        }
+
+        $history = DB::table('traffic_readings')
+            ->where('road_id', $roadId)
+            ->orderBy('recorded_at', 'desc')
+            ->select('vehicle_density', 'avg_speed_kmh', 'total_vehicles', 'incident_flag', 'recorded_at')
+            ->get();
+
+        return response()->json($history, 200);
+    }
+
     
 }
