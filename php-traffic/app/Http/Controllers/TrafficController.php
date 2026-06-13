@@ -92,5 +92,27 @@ class TrafficController extends Controller
         return response()->json($incidents, 200);
     }
 
+    // 6. GET /api/dashboard/summary
+    public function dashboardSummary()
+    {
+        $totalRoads = TrafficRoad::count();
+        $totalReadings = DB::table('traffic_readings')->count();
+        $totalIncidents = DB::table('traffic_incidents')->count();
+        
+        $activeIncidents = DB::table('traffic_incidents')
+            ->whereNull('resolved_at')
+            ->count();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'total_roads' => $totalRoads,
+                'total_traffic_readings' => $totalReadings,
+                'total_incidents' => $totalIncidents,
+                'active_incidents' => $activeIncidents
+            ]
+        ], 200);
+    }
+
 
 }
