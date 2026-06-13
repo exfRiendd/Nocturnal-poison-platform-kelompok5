@@ -72,5 +72,25 @@ class TrafficController extends Controller
         return response()->json($history, 200);
     }
 
-    
+    // 5. GET /api/incidents
+    public function incidents()
+    {
+        $incidents = DB::table('traffic_incidents as ti')
+            ->join('traffic_roads as r', 'ti.road_id', '=', 'r.id')
+            ->select(
+                'ti.id',
+                'r.name as road_name',
+                'ti.type',
+                'ti.severity',
+                'ti.description',
+                'ti.reported_at',
+                'ti.resolved_at'
+            )
+            ->orderBy('ti.reported_at', 'desc')
+            ->get();
+
+        return response()->json($incidents, 200);
+    }
+
+
 }
