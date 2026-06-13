@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: smartcity-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: smartcity
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+ # 2. Mosquitto MQTT Broker (IOT Layer)
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: smartcity-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./iot/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  # 3. RabbitMQ (Message Broker untuk Skenario S6)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: smartcity-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  mysql_data:
