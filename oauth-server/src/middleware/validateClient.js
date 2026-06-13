@@ -3,7 +3,7 @@ const pool = require('../config/database');
 const validateClient = async (req, res, next) => {
   const { grant_type, client_id, client_secret } = req.body;
 
-  if (grant_type === 'password') {
+  if (grant_type === 'password' || grant_type === 'refresh_token') {
     return next();
   }
 

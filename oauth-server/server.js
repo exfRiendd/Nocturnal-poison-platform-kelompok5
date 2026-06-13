@@ -47,9 +47,8 @@ app.post('/oauth/token', validateClient, (req, res) => {
     }
 });
 
-app.post('/oauth/introspect', validateClient, introspect);
-
-app.post('/oauth/revoke', validateClient, revoke);
+app.post('/oauth/introspect', introspect); 
+app.post('/oauth/revoke', revoke);
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
