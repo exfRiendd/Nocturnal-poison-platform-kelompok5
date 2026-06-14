@@ -4,7 +4,15 @@ require('dotenv').config();
 const verifyToken = async (req, res, next) => {
   const publicPaths = ['/health', '/metrics', '/oauth/token'];
   
-  if (publicPaths.includes(req.path) || (req.path === '/api/citizens' && req.method === 'POST')) {
+  if (publicPaths.includes(req.path)) {
+    return next();
+  }
+
+  if (req.path === '/api/citizens' && req.method === 'POST') {
+    return next();
+  }
+
+  if ((req.path === '/api/traffic/readings' || req.path === '/api/environment/readings') && req.method === 'POST') {
     return next();
   }
 
