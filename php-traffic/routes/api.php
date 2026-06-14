@@ -12,10 +12,12 @@ Route::get('/roads', [TrafficController::class, 'roads']);
 
 Route::get('/roads/{id}', [TrafficController::class, 'showRoad']);
 
-Route::get('/traffic/latest', [TrafficController::class, 'latestTraffic']);
+Route::get('/traffic/current', [TrafficController::class, 'latestTraffic']);
 
 Route::get('/traffic/history/{roadId}', [TrafficController::class, 'trafficHistory']);
 
 Route::get('/incidents', [TrafficController::class, 'incidents']);
 
 Route::get('/dashboard/summary', [TrafficController::class, 'dashboardSummary']);
+
+Route::post('/traffic/readings', [TrafficController::class, 'storeReading']);

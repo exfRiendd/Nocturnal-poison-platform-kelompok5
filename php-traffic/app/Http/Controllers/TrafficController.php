@@ -114,5 +114,26 @@ class TrafficController extends Controller
         ], 200);
     }
 
+    // 7. POST /api/traffic/readings
+    public function storeReading(Request $request)
+    {
+        $validated = $request->validate([
+            'road_id'         => 'required|integer|exists:traffic_roads,id',
+            'vehicle_density' => 'required|numeric|min:0|max:100',
+            'avg_speed_kmh'   => 'required|numeric|min:0',
+            'total_vehicles'  => 'required|integer|min:0',
+            'incident_flag'   => 'required|boolean',
+        ]);
+
+        $validated['recorded_at'] = now();
+
+        DB::table('traffic_readings')->insert($validated);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data pembacaan sensor IoT berhasil disimpan'
+        ], 21);
+    }
+
 
 }
