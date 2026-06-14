@@ -37,9 +37,9 @@ app.get('/health', async (req, res) => {
   const statuses = results.map((r) => r.value);
   const allHealthy = statuses.every((s) => s.status === 'healthy');
 
-  return res.status(allHealthy ? 200 : 207).json({
+  return res.status(allHealthy ? 200 : 503).json({
     status: allHealthy ? 'ok' : 'degraded',
-    code: allHealthy ? 200 : 207,
+    code: allHealthy ? 200 : 503,
     data: statuses,
     timestamp: new Date().toISOString(),
     service: 'api-gateway',
@@ -74,9 +74,9 @@ app.use('/oauth', proxy(process.env.OAUTH_SERVER_URL, {
 app.use('/', proxyRouter);
 
 app.use((req, res) => {
-  res.status(503).json({
+  res.status(404).json({
     status: 'error',
-    code: 503,
+    code: 404,
     data: null,
     message: 'Service not found',
     timestamp: new Date().toISOString(),
