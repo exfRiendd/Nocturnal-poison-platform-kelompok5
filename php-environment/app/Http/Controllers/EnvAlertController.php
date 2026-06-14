@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EnvAlert;
+use App\Services\RabbitMQPublisher;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -90,6 +91,25 @@ class EnvAlertController extends Controller
 
         $alert = EnvAlert::create($validated);
         $alert->load('zone:id,name,city_district');
+
+        // Publish ke RabbitMQ supaya Citizen Service bisa kirim notifikasi (S6)
+        try {
+            $publisher = new RabbitMQPublisher();
+            $publisher->publish('env.alerts', [
+                'alert_id'   => $alert->id,
+                'zone_id'    => $alert->zone_id,
+                'zone_name'  => $alert->zone?->name,
+                'alert_type' => $alert->alert_type,
+                'severity'   => $alert->severity,
+                'message'    => $alert->message,
+                'value'      => $alert->value,
+                'created_at' => $alert->created_at,
+            ]);
+        } catch (\Exception $e) {
+            // Jangan gagalkan request kalau RabbitMQ tidak tersedia
+            // Log error saja, alert tetap tersimpan di DB
+            \Log::warning('RabbitMQ publish gagal: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,
