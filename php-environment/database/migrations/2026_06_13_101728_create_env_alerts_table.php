@@ -6,24 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-   public function up(): void
+    public function up(): void
     {
         Schema::create('env_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('zone_id')->constrained('shared_zones');
-            $table->string('alert_type')->default('general');
-            $table->string('severity')->default('info');
-            $table->text('message');
-            $table->timestamps();
+            $table->foreignId('zone_id')
+                  ->nullable()
+                  ->constrained('zones')
+                  ->nullOnDelete();
+
+            $table->string('alert_type', 100);
+
+            $table->enum('severity', ['low', 'medium', 'high', 'critical']);
+
+            $table->decimal('value', 10, 2)->nullable();
+            $table->decimal('threshold', 10, 2)->nullable();
+            $table->timestamp('resolved_at')->nullable();
+
+          
+            $table->timestamp('created_at')->useCurrent();
+
+            $table->index('zone_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('env_alerts');
