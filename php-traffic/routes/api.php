@@ -16,6 +16,9 @@ Route::get('/traffic/current', [TrafficController::class, 'latestTraffic']);
 
 Route::get('/traffic/history/{roadId}', [TrafficController::class, 'trafficHistory']);
 
+Route::get('/traffic/history', [TrafficController::class, 'trafficHistoryAll']);
+
+
 Route::get('/incidents', [TrafficController::class, 'incidents']);
 
 Route::get('/dashboard/summary', [TrafficController::class, 'dashboardSummary']);

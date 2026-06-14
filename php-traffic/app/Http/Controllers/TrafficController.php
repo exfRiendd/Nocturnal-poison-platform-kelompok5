@@ -135,5 +135,38 @@ class TrafficController extends Controller
         ], 21);
     }
 
+    //8. GET api/traffic/history
+    public function trafficHistoryAll(Request $request)
+    {
+        $query = DB::table('traffic_readings as tr')
+            ->join('traffic_roads as r', 'tr.road_id', '=', 'r.id')
+            ->select(
+                'tr.id',
+                'r.name as road_name',
+                'r.zone_id',
+                'tr.vehicle_density',
+                'tr.avg_speed_kmh',
+                'tr.total_vehicles',
+                'tr.incident_flag',
+                'tr.recorded_at'
+            );
+
+        if ($request->filled('zone_id')) {
+            $query->where('r.zone_id', $request->zone_id);
+        }
+
+        if ($request->filled('start_date')) {
+            $query->where('tr.recorded_at', '>=', $request->start_date . ' 00:00:00');
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('tr.recorded_at', '<=', $request->end_date . ' 23:59:59');
+        }
+
+        $historyData = $query->orderBy('tr.recorded_at', 'desc')->get();
+
+        return response()->json($historyData, 200);
+    }
+
 
 }
