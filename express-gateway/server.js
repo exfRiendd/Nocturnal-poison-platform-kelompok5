@@ -5,6 +5,8 @@ const proxy = require('express-http-proxy');
 const dotenv = require('dotenv');
 const { globalLimiter } = require('./src/middlewares/rate-limiter');
 const proxyRouter = require('./src/routes/proxy');
+const { register } = require('./src/config/metrics');
+const metricsCollector = require('./src/middlewares/metrics-collector');
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
+app.use(metricsCollector);
 app.use(globalLimiter);
 
 app.get('/health', async (req, res) => {
@@ -43,8 +46,13 @@ app.get('/health', async (req, res) => {
   });
 });
 
-app.get('/metrics', (req, res) => {
-  res.status(200).send('# metrics endpoint');
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err.message);
+  }
 });
 
 app.use('/oauth', proxy(process.env.OAUTH_SERVER_URL, {
