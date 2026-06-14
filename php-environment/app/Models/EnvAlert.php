@@ -8,15 +8,16 @@ class EnvAlert extends Model
 {
     protected $table = 'env_alerts';
 
-    public $timestamps = false; 
+    public $timestamps = true;
 
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = null;
+    const UPDATED_AT = null; // tidak ada kolom updated_at di tabel
 
     protected $fillable = [
         'zone_id',
         'alert_type',
         'severity',
+        'message',     // deskripsi alert untuk notifikasi ke warga
         'value',       
         'threshold',   
         'resolved_at', 
