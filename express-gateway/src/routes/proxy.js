@@ -11,8 +11,13 @@ routes.forEach((route) => {
     verifyToken,
     authLimiter,
     proxy(route.target, {
-        proxyReqPathResolver: (req) => {
-        return req.url;
+      proxyReqPathResolver: (req) => {
+        if (route.stripPrefix) {
+          const withoutApi = route.prefix.replace('/api', '');
+          return withoutApi + (req.url === '/' ? '' : req.url);
+        }
+        
+        return route.prefix + (req.url === '/' ? '' : req.url);
       },
       proxyErrorHandler: (err, res, next) => {
         return res.status(502).json({
