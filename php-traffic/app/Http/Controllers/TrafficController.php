@@ -168,5 +168,57 @@ class TrafficController extends Controller
         return response()->json($historyData, 200);
     }
 
+    // 9. GET /api/traffic/stats
+    public function trafficStats()
+    {
+        $stats = DB::table('traffic_readings')
+            ->select(
+                DB::raw('ROUND(AVG(vehicle_density), 2) as avg_density'),
+                DB::raw('ROUND(AVG(avg_speed_kmh), 2) as avg_speed'),
+                DB::raw('SUM(total_vehicles) as total_vehicles')
+            )
+            ->first();
+
+        $totalIncidents = DB::table('traffic_incidents')->count();
+
+        return response()->json([
+            'status' => 'success',
+            'analytics' => [
+                'avg_density' => (float) $stats->avg_density,
+                'avg_speed' => (float) $stats->avg_speed,
+                'total_vehicles' => (int) $stats->total_vehicles,
+                'total_incidents' => $totalIncidents
+            ]
+        ], 200);
+    }
+
+    // 10. GET /api/traffic/congestion 
+    public function congestionAnalysis()
+    {
+        $roadsData = DB::table('traffic_readings as tr')
+            ->join('traffic_roads as r', 'tr.road_id', '=', 'r.id')
+            ->select('r.name as road_name', DB::raw('ROUND(AVG(tr.vehicle_density), 2) as avg_density'))
+            ->groupBy('r.name')
+            ->get();
+
+        // Memberikan label otomatis (High, Medium, Low) berdasarkan tingkat kepadatan lalu lintas
+        $formattedData = $roadsData->map(function ($item) {
+            $status = 'Low';
+            if ($item->avg_density > 70) {
+                $status = 'High';
+            } elseif ($item->avg_density >= 40) {
+                $status = 'Medium';
+            }
+
+            return [
+                'road' => $item->road_name,
+                'avg_density' => (float) $item->avg_density,
+                'status' => $status
+            ];
+        });
+
+        return response()->json($formattedData, 200);
+    }
+
 
 }

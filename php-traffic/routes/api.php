@@ -21,6 +21,10 @@ Route::get('/traffic/history', [TrafficController::class, 'trafficHistoryAll']);
 
 Route::get('/incidents', [TrafficController::class, 'incidents']);
 
-Route::get('/dashboard/summary', [TrafficController::class, 'dashboardSummary']);
+Route::get('/traffic/summary', [TrafficController::class, 'dashboardSummary']);
 
 Route::post('/traffic/readings', [TrafficController::class, 'storeReading']);
+
+Route::get('/traffic/stats', [TrafficController::class, 'trafficStats']);
+
+Route::get('/traffic/congestion', [TrafficController::class, 'congestionAnalysis']);
