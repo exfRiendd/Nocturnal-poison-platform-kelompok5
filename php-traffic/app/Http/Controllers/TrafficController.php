@@ -132,7 +132,7 @@ class TrafficController extends Controller
         return response()->json([
             'status'  => 'success',
             'message' => 'Data pembacaan sensor IoT berhasil disimpan'
-        ], 21);
+        ], 201);
     }
 
     //8. GET api/traffic/history
