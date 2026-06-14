@@ -16,4 +16,9 @@ class TrafficIncident extends Model
         'severity',
         'description'
     ];
+
+    public function road()
+    {
+        return $this->belongsTo(TrafficRoad::class, 'road_id', 'id');
+    }
 }

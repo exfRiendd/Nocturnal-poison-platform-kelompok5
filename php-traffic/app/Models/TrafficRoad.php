@@ -16,4 +16,14 @@ class TrafficRoad extends Model
         'road_type',
         'length_km'
     ];
+
+    public function readings()
+    {
+        return $this->hasMany(TrafficReading::class, 'road_id', 'id');
+    }
+
+    public function incidents()
+    {
+        return $this->hasMany(TrafficIncident::class, 'road_id', 'id');
+    }
 }

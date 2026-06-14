@@ -18,4 +18,9 @@ class TrafficReading extends Model
         'incident_flag',
         'recorded_at'
     ];
+
+    public function road()
+    {
+        return $this->belongsTo(TrafficRoad::class, 'road_id', 'id');
+    }
 }
