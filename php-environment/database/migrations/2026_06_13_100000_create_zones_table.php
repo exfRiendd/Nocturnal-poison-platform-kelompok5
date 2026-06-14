@@ -6,22 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-
+    
     public function up(): void
     {
-        Schema::create('shared_zones', function (Blueprint $table) {
+        if (Schema::hasTable('zones')) {
+            return;
+        }
+
+        Schema::create('zones', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->timestamps();
+            $table->string('name', 100);
+            $table->string('city_district', 100)->nullable(); 
+            $table->string('coordinates', 255)->nullable();   
+            $table->decimal('area_km2', 10, 2)->nullable();   
+            
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('zones');
