@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->enum('severity', ['low', 'medium', 'high', 'critical']);
 
+            $table->text('message')->nullable(); // deskripsi untuk notifikasi warga (S6)
+
             $table->decimal('value', 10, 2)->nullable();
             $table->decimal('threshold', 10, 2)->nullable();
             $table->timestamp('resolved_at')->nullable();
