@@ -53,6 +53,8 @@ const generateRefreshToken = async () => {
 };
 
 const saveToken = async (token, client, user) => {
+  const refreshTokenExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
   await pool.execute(
     'INSERT INTO oauth_tokens (client_id, user_id, access_token, refresh_token, expires_at) VALUES (?, ?, ?, ?, ?)',
     [
@@ -60,15 +62,15 @@ const saveToken = async (token, client, user) => {
       user ? user.id : null,
       token.accessToken,
       token.refreshToken || null,
-      token.accessTokenExpiresAt,
+      refreshTokenExpiresAt, // 7 hari Refresh Token
     ]
   );
 
   return {
     accessToken: token.accessToken,
-    accessTokenExpiresAt: token.accessTokenExpiresAt,
+    accessTokenExpiresAt: token.accessTokenExpiresAt, // 1 jam
     refreshToken: token.refreshToken,
-    refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+    refreshTokenExpiresAt: refreshTokenExpiresAt,
     client,
     user,
   };
@@ -87,7 +89,7 @@ const getAccessToken = async (accessToken) => {
 
     return {
       accessToken: row.access_token,
-      accessTokenExpiresAt: new Date(row.expires_at),
+      accessTokenExpiresAt: new Date(decoded.exp * 1000), 
       client: { id: decoded.client_id },
       user: decoded.user_id ? { id: decoded.user_id, role: decoded.role } : null,
     };
