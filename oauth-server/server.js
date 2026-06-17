@@ -1,5 +1,5 @@
+require('dotenv').config();
 const express = require('express');
-const dotenv = require('dotenv');
 const validateClient = require('./src/middleware/validateClient');
 const {
   passwordGrant,
@@ -9,7 +9,6 @@ const {
   revoke,
 } = require('./src/controllers/authController');
 
-dotenv.config();
 
 const app = express();
 app.use(express.json());
