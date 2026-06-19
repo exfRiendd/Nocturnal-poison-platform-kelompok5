@@ -42,6 +42,9 @@ CREATE TABLE citizen_citizens (
     phone VARCHAR(20),
     zone_id INT,
     role ENUM('citizen', 'admin') DEFAULT 'citizen',
+    age INT NULL CHECK(age BETWEEN 1 AND 120),
+    weight_kg DECIMAL(5,2) CHECK(weight_kg BETWEEN 1 AND 500),
+    mask_type ENUM('none', 'cloth', 'medical', 'n95') NOT NULL DEFAULT 'none',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_citizen_zone
         FOREIGN KEY (zone_id)
@@ -81,6 +84,95 @@ CREATE TABLE citizen_notifications (
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE citizen_devices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    device_id VARCHAR(100) NOT NULL UNIQUE,
+    citizen_id INT NULL,
+    device_label VARCHAR(100) NULL,
+    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM(
+        'active',
+        'inactive'
+    ) DEFAULT 'active',
+    last_seen_at TIMESTAMP NULL,
+
+    CONSTRAINT fk_device_citizen
+        FOREIGN KEY (citizen_id)
+        REFERENCES citizen_citizens(id)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE citizen_activity_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    citizen_id INT NOT NULL,
+    citizen_device_id INT NULL,
+    zone_id INT NOT NULL,
+    activity_type ENUM(
+        'rest',
+        'walking',
+        'running'
+    ) NOT NULL,
+    avg_heart_rate DECIMAL(5,2) NOT NULL,
+    max_heart_rate DECIMAL(5,2) NOT NULL,
+    started_at TIMESTAMP NOT NULL,
+    ended_at TIMESTAMP NULL,
+    duration_minutes INT NULL,
+
+    status ENUM(
+        'active',
+        'completed'
+    ) NOT NULL DEFAULT 'active',
+
+    CONSTRAINT fk_session_citizen
+        FOREIGN KEY (citizen_id)
+        REFERENCES citizen_citizens(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_session_zone
+        FOREIGN KEY (zone_id)
+        REFERENCES zones(id)
+        ON DELETE NO ACTION,
+    
+    CONSTRAINT fk_session_device
+        FOREIGN KEY (citizen_device_id)
+        REFERENCES citizen_devices(id)
+        ON DELETE SET NULL
+
+) ENGINE=InnoDB;
+
+CREATE TABLE citizen_health_exposures (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    citizen_id INT NOT NULL,
+    session_id INT NOT NULL,
+    zone_id INT NULL,
+
+    predicted_aqi DECIMAL(10,2),
+    total_air_inhaled_liters DECIMAL(10,2),
+    pm25_retained_micrograms DECIMAL(10,4),
+    co_exposure_index DECIMAL(10,2),
+    cumulative_toxic_load_score DECIMAL(5,2),
+    temporary_lung_capacity_drop_percentage DECIMAL(5,2),
+    recovery_time_hours DECIMAL(5,1),
+    clinical_guidance_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_exposure_citizen
+        FOREIGN KEY (citizen_id)
+        REFERENCES citizen_citizens(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_exposure_session
+        FOREIGN KEY (session_id)
+        REFERENCES citizen_activity_sessions(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_exposure_zone
+        FOREIGN KEY (zone_id)
+        REFERENCES zones(id)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
 
 -- 4. TRAFFIC SERVICE 
 
@@ -192,3 +284,9 @@ CREATE INDEX idx_env_ml_predictions_zone ON env_ml_predictions(zone_id);
 -- Composite Indexes khusus akselerasi kueri ML Malam-Subuh hari
 CREATE INDEX idx_nocturnal_traffic ON traffic_readings(road_id, recorded_at);
 CREATE INDEX idx_nocturnal_env ON env_sensor_readings(zone_id, recorded_at);
+
+CREATE INDEX idx_citizen_devices_citizen ON citizen_devices(citizen_id);
+CREATE INDEX idx_activity_sessions_citizen ON citizen_activity_sessions(citizen_id);
+CREATE INDEX idx_activity_sessions_device_status ON citizen_activity_sessions(citizen_device_id, status);
+CREATE INDEX idx_health_exposures_citizen ON citizen_health_exposures(citizen_id);
+CREATE INDEX idx_health_exposures_created ON citizen_health_exposures(created_at);
