@@ -228,5 +228,139 @@
     "x": 150,
     "y": 180,
     "wires": [["parse-sensor"]]
+  },
+
+  {
+    "id": "tab-wearable",
+    "type": "tab",
+    "label": "Wearable Heart Rate",
+    "disabled": false,
+    "info": ""
+  },
+
+  {
+    "id": "mqtt-wearable",
+    "type": "mqtt in",
+    "z": "tab-wearable",
+    "name": "MQTT Heart Rate",
+    "topic": "wearable/+/heartrate",
+    "qos": "1",
+    "datatype": "auto-detect",
+    "broker": "cfg-mqtt",
+    "nl": false,
+    "rap": false,
+    "rh": 0,
+    "inputs": 0,
+    "x": 120,
+    "y": 100,
+    "wires": [["parse-wearable"]]
+  },
+
+  {
+    "id": "parse-wearable",
+    "type": "json",
+    "z": "tab-wearable",
+    "name": "Parse JSON",
+    "property": "payload",
+    "action": "obj",
+    "pretty": false,
+    "x": 310,
+    "y": 100,
+    "wires": [["fn-detect-session"]]
+  },
+
+  {
+    "id": "fn-detect-session",
+    "type": "function",
+    "z": "tab-wearable",
+    "name": "Deteksi sesi aktivitas",
+    "func": "var deviceId = msg.payload.device_id || 'unknown';\nvar hr       = msg.payload.heart_rate;\nvar zoneId   = msg.payload.zone_id;\nvar ts       = msg.payload.recorded_at || new Date().toISOString();\n\n// Klasifikasi aktivitas dari heart rate\nvar activity;\nif (hr < 90) {\n    activity = 'rest';\n} else if (hr < 130) {\n    activity = 'walking';\n} else {\n    activity = 'running';\n}\n\n// Ambil state sesi dari context (per device)\nvar key     = 'session_' + deviceId;\nvar session = flow.get(key) || { active: false };\n\nif (!session.active && activity !== 'rest') {\n    // Sesi dimulai\n    flow.set(key, { active: true, started_at: ts });\n    msg.payload = { device_id: deviceId, zone_id: zoneId, activity_type: activity, started_at: ts };\n    msg.headers = { 'Content-Type': 'application/json' };\n    return [msg, null];\n}\n\nif (session.active && activity === 'rest') {\n    // Sesi selesai\n    flow.set(key, { active: false });\n    msg.payload = { device_id: deviceId, zone_id: zoneId, ended_at: ts };\n    msg.headers = { 'Content-Type': 'application/json' };\n    return [null, msg];\n}\n\n// Tidak ada perubahan state\nreturn [null, null];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 510,
+    "y": 100,
+    "wires": [["http-session-start"], ["http-session-end"]]
+  },
+
+  {
+    "id": "http-session-start",
+    "type": "http request",
+    "z": "tab-wearable",
+    "name": "POST /api/activity-sessions/start",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://php-citizen:8000/api/activity-sessions/start",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 760,
+    "y": 60,
+    "wires": [["debug-session-start"]]
+  },
+
+  {
+    "id": "http-session-end",
+    "type": "http request",
+    "z": "tab-wearable",
+    "name": "POST /api/activity-sessions/end",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://php-citizen:8000/api/activity-sessions/end",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 760,
+    "y": 140,
+    "wires": [["debug-session-end"]]
+  },
+
+  {
+    "id": "debug-session-start",
+    "type": "debug",
+    "z": "tab-wearable",
+    "name": "Response Start",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "payload.success",
+    "statusType": "msg",
+    "x": 980,
+    "y": 60,
+    "wires": []
+  },
+
+  {
+    "id": "debug-session-end",
+    "type": "debug",
+    "z": "tab-wearable",
+    "name": "Response End",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "payload.success",
+    "statusType": "msg",
+    "x": 980,
+    "y": 140,
+    "wires": []
   }
 ]
