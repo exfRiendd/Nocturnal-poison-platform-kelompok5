@@ -4,7 +4,7 @@ import time
 import random
 from datetime import datetime, timezone, timedelta
 
-# Konfigurasi dari tim IoT
+# Config IoT
 BROKER_HOST = "localhost"
 BROKER_PORT = 1883
 DEVICE_ID = "wearable-001"
@@ -19,7 +19,7 @@ client.loop_start()
 print("⌚ Memulai Simulasi Smartwatch (Otomatis)")
 print("Skenario: Istirahat -> Jalan -> Lari -> Istirahat")
 
-# Skenario sesuai kontrak: (Nama, Min HR, Max HR, Jumlah Kirim)
+# Skenario: (Nama, Min HR, Max HR, Jumlah Kirim)
 scenario_phases = [
     ("REST", 70, 85, 3),      # < 90
     ("WALKING", 95, 120, 3),  # 90 - 129
