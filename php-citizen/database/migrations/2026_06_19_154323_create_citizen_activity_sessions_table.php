@@ -9,53 +9,35 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('citizen_activity_sessions', function (Blueprint $table) {
+            $table->integer('id', true);
 
-            $table->id();
-
-            $table->foreignId('citizen_id')
-                ->constrained('citizen_citizens')
+            $table->integer('citizen_id');
+            $table->foreign('citizen_id')
+                ->references('id')
+                ->on('citizen_citizens')
                 ->cascadeOnDelete();
 
-            $table->foreignId('citizen_device_id')
-                ->nullable()
-                ->constrained('citizen_devices')
+            $table->integer('citizen_device_id')->nullable();
+            $table->foreign('citizen_device_id')
+                ->references('id')
+                ->on('citizen_devices')
                 ->nullOnDelete();
 
-            $table->foreignId('zone_id')
-                ->constrained('zones');
+            $table->integer('zone_id');
+            $table->foreign('zone_id')
+                ->references('id')
+                ->on('zones');
 
-            $table->enum('activity_type', [
-                'rest',
-                'walking',
-                'running'
-            ]);
-
+            $table->enum('activity_type', ['rest', 'walking', 'running']);
             $table->decimal('avg_heart_rate', 5, 2);
-
             $table->decimal('max_heart_rate', 5, 2);
-
             $table->timestamp('started_at');
+            $table->timestamp('ended_at')->nullable();
+            $table->integer('duration_minutes')->nullable();
+            $table->enum('status', ['active', 'completed'])->default('active');
 
-            $table->timestamp('ended_at')
-                ->nullable();
-
-            $table->integer('duration_minutes')
-                ->nullable();
-
-            $table->enum('status', [
-                'active',
-                'completed'
-            ])->default('active');
-
-            $table->index(
-                'citizen_id',
-                'idx_activity_sessions_citizen'
-            );
-
-            $table->index(
-                ['citizen_device_id', 'status'],
-                'idx_activity_sessions_device_status'
-            );
+            $table->index('citizen_id', 'idx_activity_sessions_citizen');
+            $table->index(['citizen_device_id', 'status'], 'idx_activity_sessions_device_status');
         });
     }
 
