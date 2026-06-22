@@ -87,6 +87,7 @@ void loop() {
                      ",\"pm10\":"         + String(pm10, 2)       +
                      ",\"co\":"           + String(co, 3)         +
                      ",\"no2\":"          + String(no2, 2)        +
+                     ",\"aqi\":"          + String(aqi, 2)        +
                      ",\"temperature\":"  + String(suhu, 2)       +
                      ",\"humidity\":"     + String(kelembab, 2)   +
                      ",\"wind_speed\":2.5}";
