@@ -5,7 +5,8 @@ import paho.mqtt.client as mqtt
 # Konfigurasi Wokwi (Sumber Data)
 WOKWI_BROKER = "broker.hivemq.com"
 WOKWI_PORT = 1883
-WOKWI_TOPIC = "smartcity/environment/+/sensor" # Tangkap semua zone
+WOKWI_TOPIC_ENV = "smartcity/environment/+/sensor" 
+WOKWI_TOPIC_HR = "wearable/+/heartrate"
 
 # Konfigurasi Lokal (Tujuan Data)
 LOCAL_BROKER = "localhost"
@@ -21,7 +22,8 @@ client_local = mqtt.Client("Bridge-Local-Publisher")
 def on_wokwi_connect(client, userdata, flags, rc):
     if rc == 0:
         print(f"[WOKWI] Berhasil konek ke {WOKWI_BROKER}. Menunggu data dari Wokwi...")
-        client.subscribe(WOKWI_TOPIC)
+        client.subscribe(WOKWI_TOPIC_ENV)
+        client.subscribe(WOKWI_TOPIC_HR)
     else:
         print(f"[WOKWI] Gagal konek, kode: {rc}")
 
@@ -33,31 +35,41 @@ def on_local_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     try:
-        # 1. Terima data dari Wokwi
         payload = msg.payload.decode('utf-8')
         data = json.loads(payload)
-        zone_id = data.get("zone_id", 1)
-        aqi = data.get("aqi", 0)
+        topic = msg.topic
         
-        print(f"\n[DATA MASUK] Wokwi Zone {zone_id} | AQI: {aqi}")
+        # JIKA DATA SENSOR LINGKUNGAN
+        if "smartcity/environment" in topic:
+            zone_id = data.get("zone_id", 1)
+            aqi = data.get("aqi", 0)
+            
+            print(f"\n[DATA MASUK] Wokwi Zone {zone_id} | AQI: {aqi}")
 
-        # 2. Forward/Kirim ulang data sensor ke Docker lokal
-        local_sensor_topic = f"smartcity/environment/{zone_id}/sensor"
-        client_local.publish(local_sensor_topic, payload)
-        print(f" └─> Forwarded ke lokal: {local_sensor_topic}")
+            local_sensor_topic = f"smartcity/environment/{zone_id}/sensor"
+            client_local.publish(local_sensor_topic, payload)
+            print(f" └─> Forwarded ke lokal: {local_sensor_topic}")
 
-        # 3. Deteksi Anomali (Nocturnal Inversion)
-        if aqi > AQI_DANGER:
-            anomaly_topic = f"smartcity/environment/{zone_id}/anomaly"
-            anomaly_payload = {
-                "zone_id": zone_id,
-                "anomaly_type": "NOCTURNAL_INVERSION",
-                "severity": "CRITICAL" if aqi > 300 else "HIGH",
-                "trigger_value": aqi,
-                "description": f"Bahaya! AQI {aqi} terdeteksi. Warga dilarang beraktivitas di luar."
-            }
-            client_local.publish(anomaly_topic, json.dumps(anomaly_payload))
-            print(f" └─> ⚠️ ALERT: Anomali dikirim ke {anomaly_topic}")
+            if aqi > AQI_DANGER:
+                anomaly_topic = f"smartcity/environment/{zone_id}/anomaly"
+                anomaly_payload = {
+                    "zone_id": zone_id,
+                    "anomaly_type": "NOCTURNAL_INVERSION",
+                    "severity": "CRITICAL" if aqi > 300 else "HIGH",
+                    "trigger_value": aqi,
+                    "description": f"Bahaya! AQI {aqi} terdeteksi. Warga dilarang beraktivitas di luar."
+                }
+                client_local.publish(anomaly_topic, json.dumps(anomaly_payload))
+                print(f" └─> ⚠️ ALERT: Anomali dikirim ke {anomaly_topic}")
+                
+        # JIKA DATA DETAK JANTUNG (WEARABLE)
+        elif "wearable" in topic:
+            device_id = data.get("device_id", "unknown")
+            hr = data.get("heart_rate", 0)
+            
+            print(f"\n[DATA JANTUNG] Wokwi Device {device_id} | HR: {hr} bpm")
+            client_local.publish(topic, payload)
+            print(f" └─> Forwarded ke lokal: {topic}")
 
     except Exception as e:
         print(f"Error parsing message: {e}")
