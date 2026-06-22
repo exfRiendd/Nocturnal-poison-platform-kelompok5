@@ -6,7 +6,6 @@ OUTPUT_DIR = Path(__file__).resolve().parent / "data"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SEED = 42
 
-# Mapping konstanta sesuai Section 6.6 (Catatan implementasi)
 ACTIVITY_RMV_BASE = {
     "resting": 7,
     "light_jog": 25,
@@ -41,7 +40,14 @@ def _weighted_choice(rng: np.random.Generator, mapping: dict, weights: dict, n: 
     return rng.choice(keys, size=n, p=probs)
 
 
-# 1. TOXIC DOSE ESTIMATOR DATASET
+def _circular_gaussian(hour, peak_hour: float, width: float):
+    """Gaussian yang 'melingkar' di siklus 24 jam (jam 23 dianggap dekat jam
+    0, bukan jauh) -- dipakai biar pola diurnal nggak patah di tengah malam."""
+    diff = np.abs(hour - peak_hour)
+    diff = np.minimum(diff, 24 - diff)
+    return np.exp(-(diff ** 2) / width)
+
+
 def generate_toxic_dose_dataset(n: int, rng: np.random.Generator) -> pd.DataFrame:
     activity = _weighted_choice(rng, ACTIVITY_RMV_BASE, ACTIVITY_WEIGHTS, n)
     mask_type = _weighted_choice(rng, MASK_EFFICIENCY, MASK_WEIGHTS, n)
@@ -56,28 +62,45 @@ def generate_toxic_dose_dataset(n: int, rng: np.random.Generator) -> pd.DataFram
     duration_minutes = np.clip(
         rng.gamma(shape=3.0, scale=15.0, size=n), 10, 150)
 
-    # Konsentrasi polutan (skala realistis kualitas udara outdoor)
-    pm25 = np.clip(rng.lognormal(mean=np.log(35), sigma=0.6, size=n), 5, 300)
+    is_night_window = rng.random(n) < 0.70
+    hour = np.where(
+        is_night_window,
+        rng.uniform(17, 29, n) % 24,
+        rng.uniform(5, 17, n),
+    )
+
+    diurnal_phase = np.cos(2 * np.pi * (hour - 14) / 24)
+    temperature = np.clip(26 + 6 * diurnal_phase +
+                          rng.normal(0, 1.2, n), 18, 36)
+    wind_speed = np.clip(3.5 + 2.5 * diurnal_phase +
+                         rng.normal(0, 0.6, n), 0.2, 9.0)
+    humidity = np.clip(70 - 18 * diurnal_phase + rng.normal(0, 4, n), 30, 98)
+
+    hour_factor = 0.5 * (1 + np.cos(2 * np.pi * (hour - 3) / 24))
+    wind_factor = np.clip(1 - wind_speed / 8.0, 0, 1)
+    inversion_factor = np.clip(0.6 * hour_factor + 0.4 * wind_factor, 0, 1)
+
+    pm25 = np.clip(
+        rng.lognormal(mean=np.log(35 * (1 + 0.9 * inversion_factor)), sigma=0.6, size=n), 5, 300)
     pm10 = np.clip(pm25 * rng.uniform(1.3, 2.0, n) +
                    rng.normal(0, 5, n), pm25, 500)
-    co = np.clip(rng.lognormal(mean=np.log(2.5), sigma=0.7, size=n), 0.2, 20)
-    no2 = np.clip(rng.lognormal(mean=np.log(30), sigma=0.6, size=n), 2, 200)
+    co = np.clip(
+        rng.lognormal(mean=np.log(2.5 * (1 + 0.7 * inversion_factor)), sigma=0.7, size=n), 0.2, 20)
+    no2 = np.clip(
+        rng.lognormal(mean=np.log(30 * (1 + 0.8 * inversion_factor)), sigma=0.6, size=n), 2, 200)
 
     total_air_inhaled_liters = rmv_liters_per_min * duration_minutes
     filt = 1 - mask_efficiency
 
-    # pm2.5 retained (µg): konsentrasi µg/m3 -> µg/L (/1000) * volume udara terhirup (L)
     pm25_retained_micrograms = (pm25 / 1000) * total_air_inhaled_liters * filt
     pm25_retained_micrograms = np.round(pm25_retained_micrograms, 2)
 
-    # CO retained (mg) -> dikonversi jadi estimasi kenaikan %HbCO (synthetic scaling)
     co_inhaled_mg = (co * 1.145 / 1000) * total_air_inhaled_liters * filt
     co_blood_saturation_estimate = np.clip(
         co_inhaled_mg * 0.08 + rng.normal(0, 0.08, n), 0, 12
     )
     co_blood_saturation_estimate = np.round(co_blood_saturation_estimate, 2)
 
-    # Cumulative toxic load score (0-100), mengikuti formula dasar D = ΣC×RMV×t×(1-mask)
     raw_dose = (
         (0.45 * pm25 + 0.22 * pm10 + 9.0 * co + 0.55 * no2)
         * rmv_liters_per_min
@@ -93,8 +116,8 @@ def generate_toxic_dose_dataset(n: int, rng: np.random.Generator) -> pd.DataFram
 
     df = pd.DataFrame(
         {
-            "activity_intensity": activity,  # metadata, bukan fitur model
-            "mask_type": mask_type,  # metadata, bukan fitur model
+            "activity_intensity": activity,
+            "mask_type": mask_type,
             "pm25": np.round(pm25, 2),
             "pm10": np.round(pm10, 2),
             "co": np.round(co, 2),
@@ -102,6 +125,11 @@ def generate_toxic_dose_dataset(n: int, rng: np.random.Generator) -> pd.DataFram
             "rmv_liters_per_min": np.round(rmv_liters_per_min, 2),
             "duration_minutes": np.round(duration_minutes, 1),
             "mask_efficiency": mask_efficiency,
+            "hour": np.round(hour, 2),
+            "temperature": np.round(temperature, 2),
+            "humidity": np.round(humidity, 2),
+            "wind_speed": np.round(wind_speed, 2),
+            "inversion_factor": np.round(inversion_factor, 3),
             "cumulative_toxic_load_score": cumulative_toxic_load_score,
             "pm25_retained_micrograms": pm25_retained_micrograms,
             "co_blood_saturation_estimate": co_blood_saturation_estimate,
@@ -142,7 +170,6 @@ def generate_lung_impact_dataset(toxic_df: pd.DataFrame, rng: np.random.Generato
     alveoli_recovery_time_hours = np.clip(
         alveoli_recovery_time_hours, 1, 120).round(1)
 
-    # Skor komposit utk kategori risiko (+noise biar boundary nggak terlalu tegas)
     composite = (
         toxic_load_score * 0.5
         + lung_function_temporary_drop_pct * 2.2
@@ -187,12 +214,15 @@ def generate_anomaly_dataset(n_zones: int, readings_per_zone: int, rng: np.rando
 
         for t in range(readings_per_zone):
             hour = (start_hour + t * 5 / 60) % 24
-            diurnal = 10 * np.exp(-((hour - 7) ** 2) / 8) + \
-                12 * np.exp(-((hour - 18) ** 2) / 8)
+
+            diurnal = (
+                6 * _circular_gaussian(hour, 7, 6)
+                + 14 * _circular_gaussian(hour, 2, 12)
+            )
             value = base_level + diurnal + rng.normal(0, 4)
 
             is_anomaly = False
-            if rng.random() < 0.04:  # ~4% anomali (sensor rusak / lonjakan ekstrem)
+            if rng.random() < 0.04:
                 if rng.random() < 0.5:
                     value = value * rng.uniform(3.5, 8.0)
                 else:
@@ -224,7 +254,6 @@ def generate_anomaly_dataset(n_zones: int, readings_per_zone: int, rng: np.rando
     return df[["sensor_value", "timestamp_hour", "rolling_mean_1h", "z_score", "is_anomaly", "zone_id"]]
 
 
-# ---------------------------------------------------------------------------
 def main():
     rng = np.random.default_rng(SEED)
 
