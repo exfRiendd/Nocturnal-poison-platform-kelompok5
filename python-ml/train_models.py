@@ -20,9 +20,7 @@ MODELS_DIR.mkdir(parents=True, exist_ok=True)
 SEED = 42
 
 
-# ---------------------------------------------------------------------------
 # 1. TOXIC DOSE ESTIMATOR
-# ---------------------------------------------------------------------------
 def train_toxic_dose_model():
     print("=" * 60)
     print("1. TOXIC DOSE ESTIMATOR (Random Forest Regressor)")
@@ -57,10 +55,9 @@ def train_toxic_dose_model():
     )
     print("  Tersimpan -> models/toxic_dose_model.joblib\n")
 
-
-# ---------------------------------------------------------------------------
 # 2. LUNG FUNCTION IMPACT MODEL
-# ---------------------------------------------------------------------------
+
+
 def train_lung_impact_model():
     print("=" * 60)
     print("2. LUNG FUNCTION IMPACT MODEL (Gradient Boosting)")
@@ -115,9 +112,7 @@ def train_lung_impact_model():
     print("  Tersimpan -> models/lung_impact_model.joblib\n")
 
 
-# ---------------------------------------------------------------------------
 # 3. SENSOR ANOMALY DETECTOR
-# ---------------------------------------------------------------------------
 def train_anomaly_model():
     print("=" * 60)
     print("3. SENSOR ANOMALY DETECTOR (Isolation Forest)")
