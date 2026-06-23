@@ -37,7 +37,7 @@ Route::prefix('readings')->group(function () {
 Route::prefix('alerts')->group(function () {
     // GET /api/alerts            → list (filter: severity, zone_id, active)
     // POST /api/alerts           → trigger alert (dari ML Service anomaly S6)
-    Route::get('/',    [EnvAlertController::class, 'indx']);
+    Route::get('/',    [EnvAlertController::class, 'index']);
     Route::post('/',   [EnvAlertController::class, 'store']);
 
     // GET /api/alerts/active     → alert yang belum resolved
