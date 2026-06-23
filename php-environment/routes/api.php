@@ -5,15 +5,6 @@ use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\EnvReadingController;
 use App\Http\Controllers\EnvAlertController;
 
-/*
-|--------------------------------------------------------------------------
-| Environment Service API Routes
-|--------------------------------------------------------------------------
-|
-| Base URL (via API Gateway): /api/environment/...
-| Semua response dalam format JSON.
-|
-*/
 
 // ── Health check ──────────────────────────────────────────────────────────
 Route::get('/health', fn () => response()->json([
