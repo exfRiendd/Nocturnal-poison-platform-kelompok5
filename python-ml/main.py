@@ -311,9 +311,29 @@ def predict_full_exposure_iot(req: RawIotExposureRequest):
     duration_minutes = req.duration_minutes
     if duration_minutes is None:
         if req.session_start_iso and req.session_end_iso:
-            start = datetime.fromisoformat(req.session_start_iso)
-            end = datetime.fromisoformat(req.session_end_iso)
-            duration_minutes = max((end - start).total_seconds() / 60, 1)
+            # [FIX #5] Sebelumnya datetime.fromisoformat() dipanggil tanpa
+            # try/except -> kalau formatnya tidak valid (atau salah satu
+            # naive & yang lain timezone-aware), exception ini TIDAK
+            # tertangkap dan klien menerima 500 Internal Server Error yang
+            # tidak informatif, bukan 422 yang jelas. Selain itu, kalau
+            # session_end_iso lebih awal dari session_start_iso (data
+            # rusak), delta negatif sebelumnya diam-diam dipaksa jadi 1
+            # menit oleh max(..., 1) tanpa peringatan apapun.
+            try:
+                start = datetime.fromisoformat(req.session_start_iso)
+                end = datetime.fromisoformat(req.session_end_iso)
+                delta_minutes = (end - start).total_seconds() / 60
+            except (TypeError, ValueError) as e:
+                raise HTTPException(
+                    status_code=422,
+                    detail=f"Format session_start_iso/session_end_iso tidak valid: {e}",
+                )
+            if delta_minutes <= 0:
+                raise HTTPException(
+                    status_code=422,
+                    detail="session_end_iso harus setelah session_start_iso",
+                )
+            duration_minutes = max(delta_minutes, 1)
         else:
             raise HTTPException(
                 status_code=422,

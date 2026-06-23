@@ -29,11 +29,20 @@ SESSION_CONFIG = {
     "session_id": 9901,
 }
 
+# ── State + timestamp per device ─────────────────────────────────────────
+# [FIX #1] Menambahkan *_ts agar bisa mendeteksi data basi (stale) kalau
+# salah satu device terputus koneksi MQTT tapi device lain tetap mengirim.
 state = {
     "device1": None,
+    "device1_ts": None,
     "device2": None,
+    "device2_ts": None,
     "lock": threading.Lock(),
 }
+
+# [FIX #1] Ambang batas basi: >3x interval publish Device2 (3s) dan
+# >2x interval publish Device1 (5s) -> 15s memberi buffer yang wajar.
+STALE_THRESHOLD_SEC = 15
 
 
 def heart_rate_to_activity_type(heart_rate: int) -> str:
@@ -49,10 +58,28 @@ def temperature_to_inversion_flag(temperature_c: float) -> int:
     return 1 if temperature_c < 25.0 else 0
 
 
+def _fmt(value, spec=".2f"):
+    """
+    [FIX #2] Format angka dengan aman.
+    data.get(key, '?') mengembalikan STRING '?' kalau key hilang, dan
+    f"{...:.2f}" pada string akan melempar ValueError ("Unknown format
+    code 'f' for object of type 'str'") -- exception ini sebelumnya TIDAK
+    tertangkap di on_message, sehingga bisa menjatuhkan pesan MQTT yang
+    masuk tanpa jejak/log apapun. Helper ini memastikan kita selalu
+    mendapat string yang valid untuk dicetak, walau datanya cacat.
+    """
+    try:
+        return format(float(value), spec)
+    except (TypeError, ValueError):
+        return "N/A"
+
+
 def try_send_combined_payload():
     with state["lock"]:
         d1 = state["device1"]
+        d1_ts = state["device1_ts"]
         d2 = state["device2"]
+        d2_ts = state["device2_ts"]
 
     if d1 is None or d2 is None:
         missing = []
@@ -70,6 +97,19 @@ def try_send_combined_payload():
         print(
             f"  ⚠️   zone_id TIDAK COCOK → D1={zone_d1}, D2={zone_d2}. Payload tidak dikirim.")
         print(f"       (Citizen sedang di zona berbeda dari stasiun udara yang dipantau)")
+        return
+
+    # [FIX #1] Cek staleness — kalau salah satu device sudah lama tidak
+    # mengirim data (misal kabel/WiFi putus), JANGAN kirim payload dengan
+    # data basi yang digabung dengan data fresh dari device lain.
+    now = time.time()
+    if now - d1_ts > STALE_THRESHOLD_SEC:
+        print(f"  ⚠️   Data Device 1 BASI ({now - d1_ts:.1f}s lalu) — "
+              f"stasiun udara mungkin terputus. Payload tidak dikirim.")
+        return
+    if now - d2_ts > STALE_THRESHOLD_SEC:
+        print(f"  ⚠️   Data Device 2 BASI ({now - d2_ts:.1f}s lalu) — "
+              f"smartwatch mungkin terputus. Payload tidak dikirim.")
         return
 
     heart_rate = d2.get("heart_rate", 80)
@@ -255,13 +295,19 @@ def on_message(client, userdata, msg):
     if topic == TOPIC_DEVICE1:
         print(
             f"\n[{timestamp}]   Device 1 (Stasiun Udara) — Zone {data.get('zone_id', '?')}")
-        print(f"    PM2.5={data.get('pm25', '?'):.2f}  PM10={data.get('pm10', '?'):.2f}"
-              f"  CO={data.get('co', '?'):.3f}  NO2={data.get('no2', '?'):.2f}")
-        print(f"    Suhu={data.get('temperature', '?'):.1f}°C"
-              f"  RH={data.get('humidity', '?'):.0f}%"
+        # [FIX #2] Pakai _fmt() supaya tidak crash kalau field hilang/cacat
+        # (data.get(key, '?') sebelumnya mengembalikan string '?' yang lalu
+        # diformat dengan ':.2f' -> ValueError, dan pesan ini gagal
+        # tersimpan ke state karena exception terjadi SEBELUM baris
+        # state["device1"] = data).
+        print(f"    PM2.5={_fmt(data.get('pm25'))}  PM10={_fmt(data.get('pm10'))}"
+              f"  CO={_fmt(data.get('co'), '.3f')}  NO2={_fmt(data.get('no2'))}")
+        print(f"    Suhu={_fmt(data.get('temperature'), '.1f')}°C"
+              f"  RH={_fmt(data.get('humidity'), '.0f')}%"
               f"  Angin={data.get('wind_speed', '?')}m/s")
         with state["lock"]:
             state["device1"] = data
+            state["device1_ts"] = time.time()
 
     elif topic == TOPIC_DEVICE2:
         hr = data.get("heart_rate", 0)
@@ -271,6 +317,7 @@ def on_message(client, userdata, msg):
         print(f"    HR={hr} bpm  →  Aktivitas: {activity}")
         with state["lock"]:
             state["device2"] = data
+            state["device2_ts"] = time.time()
 
     try_send_combined_payload()
 
