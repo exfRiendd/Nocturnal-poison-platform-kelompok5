@@ -162,5 +162,32 @@ class EnvReadingController extends Controller
             'success' => true,
             'data'    => $reading,
         ]);
+    
+    /**
+     * GET /api/readings/latest/{zoneId}
+     * Data polusi terbaru untuk zone tertentu.
+     * Dipakai oleh php-citizen saat sesi aktivitas warga selesai
+     * untuk menggabungkan data polusi + detak jantung → kirim ke python-ml.
+     */
+    public function getLatestByZone(int $zoneId): JsonResponse
+    {
+        $reading = EnvReading::with('zone:id,name,city_district')
+            ->where('zone_id', $zoneId)
+            ->orderBy('recorded_at', 'desc')
+            ->first();
+
+        if (! $reading) {
+            return response()->json([
+                'success' => false,
+                'message' => "No readings found for zone {$zoneId}",
+            ], 404);
+        }
+
+        $reading->risk_level = $reading->getRiskLevel();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $reading,
+        ]);
     }
 }
