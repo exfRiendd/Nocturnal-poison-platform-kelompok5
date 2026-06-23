@@ -69,5 +69,15 @@ services:
       - mosquitto
       - php-environment
 
+  # 6. IoT Simulator (HiveMQ → Mosquitto Bridge)
+  iot-simulator:
+    build: ./iot
+    container_name: smartcity-iot-simulator
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    environment:
+      - TZ=Asia/Jakarta
+
 volumes:
-  mysql_data:
+  mysql_data:

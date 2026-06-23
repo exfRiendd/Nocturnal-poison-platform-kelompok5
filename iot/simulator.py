@@ -9,7 +9,7 @@ WOKWI_TOPIC_ENV = "smartcity/environment/+/sensor"
 WOKWI_TOPIC_HR = "wearable/+/heartrate"
 
 # Konfigurasi Lokal (Tujuan Data)
-LOCAL_BROKER = "localhost"
+LOCAL_BROKER = "mosquitto"  # Use service name inside Docker network (was "localhost")
 LOCAL_PORT = 1883
 
 # Threshold
