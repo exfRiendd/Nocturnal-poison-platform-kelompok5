@@ -168,24 +168,6 @@ services:
     networks:
       - smartcity-net
 
-  # 10. Wearable Simulator
-  wearable-simulator:
-    image: python:3.11-slim
-    container_name: smartcity-wearable-simulator
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./iot:/app
-    command: >
-      sh -c "pip install -r requirements.txt -q && python wearable_simulator.py"
-    environment:
-      CITIZEN_SERVICE_URL: http://php-citizen:8000
-      INTERVAL_SEC: 60
-    depends_on:
-      - php-citizen
-    networks:
-      - smartcity-net
-
   # 11. Node-RED 
   node-red:
     image: nodered/node-red:latest
