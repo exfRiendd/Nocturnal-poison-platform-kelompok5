@@ -110,7 +110,7 @@ services:
     networks:
       - smartcity-net
 
-  # 7. PHP Environment Service
+  # 7. PHP Environment Service 
   php-environment:
     build: ./php-environment
     container_name: smartcity-environment
@@ -149,7 +149,7 @@ services:
     networks:
       - smartcity-net
 
-  # 9. IoT Simulator (environment sensor → MQTT)
+  # 9. IoT Simulator 
   iot-simulator:
     image: python:3.11-slim
     container_name: smartcity-iot-simulator
@@ -183,6 +183,23 @@ services:
       INTERVAL_SEC: 60
     depends_on:
       - php-citizen
+    networks:
+      - smartcity-net
+
+  # 11. Node-RED 
+  node-red:
+    image: nodered/node-red:latest
+    container_name: smartcity-node-red
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./iot/node-red:/data
+    environment:
+      - TZ=Asia/Jakarta
+    depends_on:
+      - mosquitto
+      - php-environment
     networks:
       - smartcity-net
 
