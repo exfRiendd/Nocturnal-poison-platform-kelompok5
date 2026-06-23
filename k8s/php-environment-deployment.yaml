@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-environment-service
+  namespace: smartcity
+spec:
+  selector:
+    app: php-environment
+  ports:
+    - port: 8002
+      targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-environment
+  namespace: smartcity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-environment
+  template:
+    metadata:
+      labels:
+        app: php-environment
+    spec:
+      containers:
+        - name: php-environment
+          image: smartcity/php-environment:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8002
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: APP_ENV
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: smartcity-secrets
+                  key: app-key
+            - name: DB_CONNECTION
+              value: "mysql"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: DB_PORT
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: DB_NAME
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: smartcity-secrets
+                  key: mysql-root-password
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: RABBITMQ_HOST
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: smartcity-config
+                  key: RABBITMQ_PORT
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: smartcity-secrets
+                  key: rabbitmq-user
+            - name: RABBITMQ_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: smartcity-secrets
+                  key: rabbitmq-pass
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "300m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 20
+            periodSeconds: 10
