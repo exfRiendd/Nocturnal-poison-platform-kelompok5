@@ -6,35 +6,38 @@ use App\Http\Controllers\EnvReadingController;
 use App\Http\Controllers\EnvAlertController;
 
 
-// ── Health check ──────────────────────────────────────────────────────────
+// Health check
 Route::get('/health', fn () => response()->json([
     'service' => 'php-environment',
     'status'  => 'ok',
     'ts'      => now()->toIso8601String(),
 ]));
 
-// ── Zones ─────────────────────────────────────────────────────────────────
+// Zones
 Route::apiResource('zones', ZoneController::class);
 
-// ── Sensor Readings ────────────────────────────────────────────────────────
+// Sensor Readings
 Route::prefix('readings')->group(function () {
     // GET /api/readings          → list (filter: zone_id, limit, from, to)
     // POST /api/readings         → IoT ingestion endpoint (Node-RED → di sini)
     Route::get('/',    [EnvReadingController::class, 'index']);
     Route::post('/',   [EnvReadingController::class, 'store']);
 
-    // GET /api/readings/latest   → data terbaru tiap zone (untuk dashboard)
+    // GET /api/readings/latest         → data terbaru tiap zone (untuk dashboard)
     Route::get('/latest', [EnvReadingController::class, 'latest']);
+
+    // GET /api/readings/latest/{zoneId} → data terbaru 1 zone spesifik (untuk php-citizen)
+    Route::get('/latest/{zoneId}', [EnvReadingController::class, 'getLatestByZone']);
 
     // GET /api/readings/{id}     → detail satu record
     Route::get('/{id}', [EnvReadingController::class, 'show']);
 });
 
-// ── Alerts ─────────────────────────────────────────────────────────────────
+// Alerts 
 Route::prefix('alerts')->group(function () {
     // GET /api/alerts            → list (filter: severity, zone_id, active)
     // POST /api/alerts           → trigger alert (dari ML Service anomaly S6)
-    Route::get('/',    [EnvAlertController::class, 'index']);
+    Route::get('/',    [EnvAlertController::class, 'indx']);
     Route::post('/',   [EnvAlertController::class, 'store']);
 
     // GET /api/alerts/active     → alert yang belum resolved
