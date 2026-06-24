@@ -3,7 +3,7 @@ FROM php:8.2-cli
 # Install system dependencies + PHP extensions (di-cache setelah build pertama)
 RUN apt-get update && apt-get install -y -qq \
     libzip-dev zip unzip curl git \
-    && docker-php-ext-install pdo pdo_mysql zip sockets \
+    && docker-php-ext-install pdo pdo_mysql zip sockets bcmath \
     && curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin --filename=composer \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -22,9 +22,9 @@ COPY . .
 # Pastikan storage & cache bisa ditulis
 RUN chmod -R 775 storage bootstrap/cache
 
-EXPOSE 8005
+EXPOSE 8000
 
 # Menjalankan Web Server SEKALIGUS background worker RabbitMQ
 # Tanda '&' membuat worker berjalan di background, sehingga perintah php-serve di depannya tetap jalan.
 CMD php artisan rabbitmq:consume & \
-    php -S 0.0.0.0:8001 -t public
+    php -S 0.0.0.0:8000 -t public

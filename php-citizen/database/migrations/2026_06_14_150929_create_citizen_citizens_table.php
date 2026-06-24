@@ -9,9 +9,9 @@ return new class extends Migration {
             $table->integer('id', true);
             $table->string('nik', 20)->unique();
             $table->string('name', 100);
-            $table->integer('age')->nullable();
-            $table->decimal('weight_kg', 5, 2)->nullable();
-            $table->string('mask_type')->nullable();
+            // $table->integer('age')->nullable();
+            // $table->decimal('weight_kg', 5, 2)->nullable();
+            // $table->string('mask_type')->nullable();
             $table->string('email', 100)->nullable()->unique();
             $table->string('password', 255)->default('$2b$10$EPF96bA/f.ZqE7nfxbN7E.S1S0P3E8yM1kQ2w3e4r5t6y7u8i9o0p');
             $table->string('phone', 20)->nullable();
