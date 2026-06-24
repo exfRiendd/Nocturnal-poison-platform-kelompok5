@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 1. MySQL Database
   mysql:
     image: mysql:8.0
     container_name: smartcity-mysql
@@ -12,8 +13,11 @@ services:
       MYSQL_DATABASE: smartcity
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - smartcity-net
 
- # 2. Mosquitto MQTT Broker (IOT Layer)
+  # 2. Mosquitto MQTT Broker (IoT Layer)
   mosquitto:
     image: eclipse-mosquitto:2.0
     container_name: smartcity-mosquitto
@@ -23,8 +27,10 @@ services:
       - "9001:9001"
     volumes:
       - ./iot/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - smartcity-net
 
-  # 3. RabbitMQ (Message Broker untuk Skenario S6)
+  # 3. RabbitMQ (Message Broker)
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: smartcity-rabbitmq
@@ -32,6 +38,156 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - smartcity-net
+
+  # 4. OAuth Server
+  oauth-server:
+    build: ./oauth-server
+    container_name: smartcity-oauth
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      JWT_SECRET: your_jwt_secret_here
+      JWT_EXPIRES_IN: 3600
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: smartcity
+      DB_USER: root
+      DB_PASS: rootpass
+    depends_on:
+      - mysql
+    networks:
+      - smartcity-net
+
+  # 5. API Gateway 
+  express-gateway:
+    build: ./express-gateway
+    container_name: smartcity-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      JWT_SECRET: your_jwt_secret_here
+      CITIZEN_SERVICE_URL: http://php-citizen:8000
+      ENV_SERVICE_URL: http://php-environment:8002
+      PYTHON_ML_URL: http://python-ml:5000
+      OAUTH_SERVER_URL: http://oauth-server:3002
+    depends_on:
+      - oauth-server
+      - php-citizen
+      - php-environment
+      - python-ml
+    networks:
+      - smartcity-net
+
+  # 6. PHP Citizen Service
+  php-citizen:
+    build: ./php-citizen
+    container_name: smartcity-citizen
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_KEY: base64:placeholder_replace_me==
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: smartcity
+      DB_USERNAME: root
+      DB_PASSWORD: rootpass
+      ENV_SERVICE_URL: http://php-environment:8002
+      PYTHON_ML_URL: http://python-ml:5000
+    depends_on:
+      - mysql
+    networks:
+      - smartcity-net
+
+  # 7. PHP Environment Service 
+  php-environment:
+    build: ./php-environment
+    container_name: smartcity-environment
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      APP_ENV: local
+      APP_KEY: base64:placeholder_replace_me==
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: smartcity
+      DB_USERNAME: root
+      DB_PASSWORD: rootpass
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - smartcity-net
+
+  # 8. Python ML Service
+  python-ml:
+    build: ./python-ml
+    container_name: smartcity-python-ml
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      MODEL_PATH: models/
+    networks:
+      - smartcity-net
+
+  # 9. IoT Simulator 
+  iot-simulator:
+    image: python:3.11-slim
+    container_name: smartcity-iot-simulator
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./iot:/app
+    command: >
+      sh -c "pip install -r requirements.txt -q && python simulator.py"
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      INTERVAL_SEC: 30
+    depends_on:
+      - mosquitto
+    networks:
+      - smartcity-net
+
+  # 11. Node-RED 
+  node-red:
+    image: nodered/node-red:latest
+    container_name: smartcity-node-red
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./iot/node-red:/data
+    environment:
+      - TZ=Asia/Jakarta
+    depends_on:
+      - mosquitto
+      - php-environment
+    networks:
+      - smartcity-net
+
+networks:
+  smartcity-net:
+    driver: bridge
 
 volumes:
   mysql_data:

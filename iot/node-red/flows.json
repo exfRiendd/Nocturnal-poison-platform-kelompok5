@@ -139,7 +139,7 @@
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
-    "url": "http://php-environment:8002/api/readings",
+    "url": "http://express-gateway:3000/api/environment/readings",
     "tls": "",
     "persist": false,
     "proxy": "",
@@ -149,7 +149,7 @@
     "headers": [],
     "x": 720,
     "y": 100,
-    "wires": [["debug-reading"]]
+    "wires": [["debug-reading", "fn-prepare-ml"]]
   },
 
   {
@@ -160,7 +160,7 @@
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
-    "url": "http://php-environment:8002/api/alerts",
+    "url": "http://express-gateway:3000/api/environment/alerts",
     "tls": "",
     "persist": false,
     "proxy": "",
@@ -361,6 +361,62 @@
     "statusType": "msg",
     "x": 980,
     "y": 140,
+    "wires": []
+  },
+
+  {
+    "id": "fn-prepare-ml",
+    "type": "function",
+    "z": "tab-iot-main",
+    "name": "Siapkan payload ML",
+    "func": "// Ambil data sensor dari response DB (jika ada)\nvar sensor = {};\nif (msg.payload && msg.payload.success && msg.payload.data) {\n    sensor = msg.payload.data;\n}\n\n// Payload untuk python-ml full-exposure-iot\nmsg.payload = {\n    zone_id:      sensor.zone_id      || 1,\n    pm25:         sensor.pm25         || 0,\n    pm10:         sensor.pm10         || 0,\n    co:           sensor.co           || 0,\n    no2:          sensor.no2          || 0,\n    aqi:          sensor.aqi          || 0,\n    temperature:  sensor.temperature  || 30,\n    humidity:     sensor.humidity     || 70,\n    wind_speed:   sensor.wind_speed   || 1.0,\n    recorded_at:  sensor.recorded_at  || new Date().toISOString()\n};\nmsg.headers = {'Content-Type': 'application/json'};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 940,
+    "y": 160,
+    "wires": [["http-ml-predict"]]
+  },
+
+  {
+    "id": "http-ml-predict",
+    "type": "http request",
+    "z": "tab-iot-main",
+    "name": "POST /predict/full-exposure-iot",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://python-ml:5000/predict/full-exposure-iot",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 940,
+    "y": 220,
+    "wires": [["debug-ml"]]
+  },
+
+  {
+    "id": "debug-ml",
+    "type": "debug",
+    "z": "tab-iot-main",
+    "name": "ML Prediction Result",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "payload.risk_level",
+    "statusType": "msg",
+    "x": 940,
+    "y": 280,
     "wires": []
   }
 ]
