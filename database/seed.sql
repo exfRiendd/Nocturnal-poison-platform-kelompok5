@@ -12,8 +12,11 @@ INSERT INTO zones (id, name, city_district, coordinates, area_km2) VALUES (4, 'J
 INSERT INTO zones (id, name, city_district, coordinates, area_km2) VALUES (5, 'Pancoran Mas', 'Depok', '-6.3954,106.8162', 13.15);
 
 -- 2. OAUTH CLIENTS (Untuk Pertukaran Token JWT)
-INSERT INTO oauth_clients (id, client_id, client_secret, grant_types, redirect_uris) VALUES (1, 'gateway_client', 'super_secret_gateway_pass', 'client_credentials', 'http://localhost:3000/callback');
-
+INSERT INTO oauth_clients (id, client_id, client_secret, grant_types, redirect_uris) 
+VALUES 
+  (1, 'gateway_client', 'super_secret_gateway_pass', 'client_credentials', 'http://localhost:3000/callback'),
+  (2, 'citizen-app', 'your_secret_here', 'password,refresh_token', NULL);
+  
 -- 3. TRAFFIC ROADS
 INSERT INTO traffic_roads (id, name, zone_id, road_type, length_km) VALUES (1, 'Jl. Margonda Raya', 1, 'Arteri', 5.2);
 INSERT INTO traffic_roads (id, name, zone_id, road_type, length_km) VALUES (2, 'Jl. Raya Lenteng Agung', 2, 'Arteri', 4.5);
