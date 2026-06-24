@@ -20,8 +20,8 @@ app.use(globalLimiter);
 
 app.get('/health', async (req, res) => {
   const services = [
+    { name: 'oauth-server', url: process.env.OAUTH_SERVER_URL }, 
     { name: 'citizen-service', url: process.env.CITIZEN_SERVICE_URL },
-    { name: 'traffic-service', url: process.env.TRAFFIC_SERVICE_URL },
     { name: 'env-service', url: process.env.ENV_SERVICE_URL },
     { name: 'python-ml', url: process.env.PYTHON_ML_URL },
   ];
