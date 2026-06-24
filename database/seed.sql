@@ -16,6 +16,7 @@ INSERT INTO oauth_clients (id, client_id, client_secret, grant_types, redirect_u
 VALUES 
   (1, 'gateway_client', 'super_secret_gateway_pass', 'client_credentials', 'http://localhost:3000/callback'),
   (2, 'citizen-app', 'your_secret_here', 'password,refresh_token', NULL);
+  
 -- 3. TRAFFIC ROADS
 INSERT INTO traffic_roads (id, name, zone_id, road_type, length_km) VALUES (1, 'Jl. Margonda Raya', 1, 'Arteri', 5.2);
 INSERT INTO traffic_roads (id, name, zone_id, road_type, length_km) VALUES (2, 'Jl. Raya Lenteng Agung', 2, 'Arteri', 4.5);

@@ -19,7 +19,9 @@ const authLimiter = rateLimit({
   max: 500,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.headers.authorization || req.ip,
+  keyGenerator: (req) => {
+    return req.headers.authorization || 'unauthenticated';
+  },
   message: {
     status: 'error',
     code: 429,
