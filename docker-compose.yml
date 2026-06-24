@@ -89,6 +89,7 @@ services:
 
   # 6. PHP Citizen Service
   php-citizen:
+    platform: linux/amd64
     build: ./php-citizen
     container_name: smartcity-citizen
     restart: unless-stopped
@@ -107,6 +108,7 @@ services:
       PYTHON_ML_URL: http://python-ml:5000
     depends_on:
       - mysql
+      - rabbitmq
     networks:
       - smartcity-net
 
