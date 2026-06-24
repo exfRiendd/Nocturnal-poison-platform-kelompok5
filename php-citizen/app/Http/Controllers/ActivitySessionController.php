@@ -146,11 +146,9 @@ class ActivitySessionController extends Controller
 
         $citizen = $session->citizen;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil data polusi terbaru dari php-environment
-        |--------------------------------------------------------------------------
-        |*/
+       
+        //  Ambil data polusi terbaru dari php-environment
+        
         $aqi = null;
         $zoneReading = [
             'pm25' => 0, 'pm10' => 0, 'co' => 0, 'no2' => 0,
@@ -183,11 +181,9 @@ class ActivitySessionController extends Controller
             Log::error('ENV Service Error: ' . $e->getMessage());
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Kirim ke Python ML
-        |--------------------------------------------------------------------------
-        |*/
+
+        // Kirim ke Python ML
+       
         $mlData = [];
         try {
             $mlPayload = [
@@ -240,12 +236,9 @@ class ActivitySessionController extends Controller
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Extract numeric value dari
-        | "+3.5% HbCO increase"
-        |--------------------------------------------------------------------------
-        */
+
+        //  "+3.5% HbCO increase"
+      
 
         $coExposureIndex = null;
 
@@ -266,11 +259,9 @@ class ActivitySessionController extends Controller
                 $matches[1] ?? null;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Simpan exposure
-        |--------------------------------------------------------------------------
-        */
+        
+        //  Simpan exposure
+       
 
         $exposure = CitizenHealthExposure::create([
 
