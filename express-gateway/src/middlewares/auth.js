@@ -2,17 +2,20 @@ const axios = require('axios');
 require('dotenv').config();
 
 const verifyToken = async (req, res, next) => {
+  // Jalur publik
   const publicPaths = ['/health', '/metrics', '/oauth/token'];
   
   if (publicPaths.includes(req.path)) {
     return next();
   }
 
+  // Bypass Registrasi Warga Baru (POST /api/citizens)
   if (req.path === '/api/citizens' && req.method === 'POST') {
     return next();
   }
 
-  if ((req.path === '/api/traffic/readings' || req.path === '/api/environment/readings') && req.method === 'POST') {
+  const isReadingsRoute = req.path === '/api/readings' || req.path === '/api/environment/readings';
+  if (isReadingsRoute && req.method === 'POST') {
     return next();
   }
 
