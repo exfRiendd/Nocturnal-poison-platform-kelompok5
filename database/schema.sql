@@ -174,50 +174,7 @@ CREATE TABLE citizen_health_exposures (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- 4. TRAFFIC SERVICE 
-
-CREATE TABLE traffic_roads (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,           
-    zone_id INT,
-    road_type VARCHAR(50),               
-    length_km DECIMAL(10,2),
-    CONSTRAINT fk_road_zone
-        FOREIGN KEY (zone_id)
-        REFERENCES zones(id)
-        ON DELETE SET NULL
-) ENGINE=InnoDB;
-
-CREATE TABLE traffic_readings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    road_id INT NOT NULL,                 
-    vehicle_density DECIMAL(10,2) NOT NULL,
-    avg_speed_kmh DECIMAL(10,2) NOT NULL,
-    total_vehicles INT NOT NULL DEFAULT 0,
-    incident_flag BOOLEAN DEFAULT FALSE,
-    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_traffic_road
-        FOREIGN KEY (road_id)
-        REFERENCES traffic_roads(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE traffic_incidents (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    road_id INT NOT NULL,
-    type VARCHAR(100) NOT NULL,
-    severity ENUM('low', 'medium', 'high', 'critical') NOT NULL,
-    description TEXT,
-    resolved_at TIMESTAMP NULL,
-    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_incident_road
-        FOREIGN KEY (road_id)
-        REFERENCES traffic_roads(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-
--- 5. ENVIRONMENT SERVICE & ML PREDICTIONS
+-- 4. ENVIRONMENT SERVICE & ML PREDICTIONS
 
 CREATE TABLE env_sensor_readings (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -267,15 +224,11 @@ CREATE TABLE env_ml_predictions (
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 6. INDEXES 
+-- 5. INDEXES 
 
 CREATE INDEX idx_citizen_reports_status ON citizen_reports(status);
 CREATE INDEX idx_citizen_reports_zone ON citizen_reports(zone_id);
 
-CREATE INDEX idx_traffic_roads_zone ON traffic_roads(zone_id);
-CREATE INDEX idx_traffic_readings_road ON traffic_readings(road_id);
-CREATE INDEX idx_traffic_readings_recorded ON traffic_readings(recorded_at);
-CREATE INDEX idx_traffic_incidents_road ON traffic_incidents(road_id);
 CREATE INDEX idx_env_sensor_readings_zone ON env_sensor_readings(zone_id);
 CREATE INDEX idx_env_sensor_readings_recorded ON env_sensor_readings(recorded_at);
 CREATE INDEX idx_env_alerts_zone ON env_alerts(zone_id);
