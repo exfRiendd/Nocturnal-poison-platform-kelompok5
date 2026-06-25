@@ -1,9 +1,10 @@
-const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config();
+
+const express = require('express');
 const oauthRoutes = require('./src/routes/oauth.routes');
 const errorHandler = require('./src/middleware/errorHandler');
 
-dotenv.config();
 
 const app = express();
 app.use(express.json());
