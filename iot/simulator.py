@@ -5,19 +5,26 @@ import paho.mqtt.client as mqtt
 # Konfigurasi Wokwi (Sumber Data)
 WOKWI_BROKER = "broker.hivemq.com"
 WOKWI_PORT = 1883
-WOKWI_TOPIC_ENV = "smartcity/environment/+/sensor" 
+WOKWI_TOPIC_ENV = "smartcity/environment/+/sensor"
 WOKWI_TOPIC_HR = "wearable/+/heartrate"
 
 # Konfigurasi Lokal (Tujuan Data)
-LOCAL_BROKER = "mosquitto"  # Use service name inside Docker network (was "localhost")
+LOCAL_BROKER = "mosquitto"  # service name inside Docker network
 LOCAL_PORT = 1883
 
 # Threshold
 AQI_DANGER = 200
 
-# Setup 2 MQTT Client
-client_wokwi = mqtt.Client("Bridge-Wokwi-Subscriber")
-client_local = mqtt.Client("Bridge-Local-Publisher")
+# paho-mqtt v2.0+ requires CallbackAPIVersion
+try:
+    from paho.mqtt.enums import CallbackAPIVersion
+    client_wokwi = mqtt.Client(CallbackAPIVersion.VERSION1, "Bridge-Wokwi-Subscriber")
+    client_local  = mqtt.Client(CallbackAPIVersion.VERSION1, "Bridge-Local-Publisher")
+except ImportError:
+    # paho-mqtt v1.x fallback
+    client_wokwi = mqtt.Client("Bridge-Wokwi-Subscriber")
+    client_local  = mqtt.Client("Bridge-Local-Publisher")
+
 
 def on_wokwi_connect(client, userdata, flags, rc):
     if rc == 0:
