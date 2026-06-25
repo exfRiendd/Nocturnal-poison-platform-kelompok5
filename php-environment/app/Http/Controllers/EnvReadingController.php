@@ -162,6 +162,7 @@ class EnvReadingController extends Controller
             'success' => true,
             'data'    => $reading,
         ]);
+    }
     
     /**
      * GET /api/readings/latest/{zoneId}
