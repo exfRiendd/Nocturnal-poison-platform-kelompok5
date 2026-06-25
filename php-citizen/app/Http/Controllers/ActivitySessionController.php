@@ -67,7 +67,7 @@ class ActivitySessionController extends Controller
             'activity_type'      => $activityType,
             'avg_heart_rate'     => $heartRate,
             'max_heart_rate'     => $heartRate,
-            'started_at'         => $request->recorded_at,
+            'started_at'         => \Carbon\Carbon::parse($request->recorded_at)->format('Y-m-d H:i:s'),
             'status'             => 'active'
         ]);
 
@@ -124,7 +124,7 @@ class ActivitySessionController extends Controller
         );
 
         $updateData = [
-            'ended_at'         => $endedAt,
+            'ended_at'         => $endedAt->format('Y-m-d H:i:s'),
             'duration_minutes' => $duration,
             'status'           => 'completed'
         ];
