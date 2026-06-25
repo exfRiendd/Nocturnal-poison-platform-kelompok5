@@ -9,11 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('env_alerts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('zone_id')
-                  ->nullable()
-                  ->constrained('zones')
-                  ->nullOnDelete();
+            $table->integer('id', true);
+            $table->integer('zone_id')->nullable();
+            $table->foreign('zone_id')->references('id')->on('zones')->nullOnDelete();
 
             $table->string('alert_type', 100);
 

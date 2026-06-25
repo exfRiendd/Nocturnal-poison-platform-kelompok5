@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('env_sensor_readings', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             
-            $table->foreignId('zone_id')->constrained('zones')->onDelete('cascade');
+            $table->integer('zone_id');
+            $table->foreign('zone_id')->references('id')->on('zones')->onDelete('cascade');
             
             $table->decimal('pm25', 10, 2)->nullable();
             $table->decimal('pm10', 10, 2)->nullable();
