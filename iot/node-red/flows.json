@@ -10,8 +10,8 @@
   {
     "id": "cfg-mqtt",
     "type": "mqtt-broker",
-    "name": "Mosquitto",
-    "broker": "mosquitto",
+    "name": "HiveMQ Public",
+    "broker": "broker.hivemq.com",
     "port": "1883",
     "clientid": "nodered-client",
     "autoConnect": true,
