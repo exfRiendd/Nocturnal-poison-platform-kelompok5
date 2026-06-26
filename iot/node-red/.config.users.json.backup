@@ -26,7 +26,7 @@
                                 "config",
                                 "context"
                             ],
-                            "height": 301.6,
+                            "height": 303.594,
                             "hidden": false,
                             "active": "info"
                         },
@@ -44,7 +44,7 @@
                             "tabs": [
                                 "explorer"
                             ],
-                            "height": 301.6,
+                            "height": 303.594,
                             "hidden": false,
                             "active": "explorer"
                         },
@@ -57,7 +57,14 @@
                         }
                     }
                 }
+            },
+            "tours": {
+                "welcome": "5.0.0"
             }
+        },
+        "debug": {
+            "filter": "filterAll",
+            "filteredNodes": []
         }
     }
 }
