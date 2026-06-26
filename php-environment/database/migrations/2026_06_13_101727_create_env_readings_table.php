@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('env_sensor_readings')) {
+            return;
+        }
+
         Schema::create('env_sensor_readings', function (Blueprint $table) {
             $table->integer('id', true);
             

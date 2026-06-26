@@ -10,7 +10,7 @@ use App\Http\Controllers\HealthExposureController;
 Route::prefix('citizens')->group(function () {
     Route::get('/', [CitizenController::class, 'index']);
     Route::post('/', [CitizenController::class, 'store']);
-    Route::get('/{id}', [CitizenController::class, 'show']);
+    Route::get('/{id}', [CitizenController::class, 'show'])->where('id', '[0-9]+');
 });
 
 Route::prefix('reports')->group(function () {

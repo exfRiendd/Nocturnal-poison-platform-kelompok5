@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('env_alerts')) {
+            return;
+        }
+
         Schema::create('env_alerts', function (Blueprint $table) {
             $table->integer('id', true);
             $table->integer('zone_id')->nullable();

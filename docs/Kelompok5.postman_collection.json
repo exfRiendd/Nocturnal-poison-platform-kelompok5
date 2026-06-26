@@ -1,0 +1,1000 @@
+{
+  "info": {
+    "_postman_id": "6e9bfdb5-4e95-4716-af91-48dbde093b1b",
+    "name": "Kelompok5",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52619014",
+    "_collection_link": "https://go.postman.co/collection/52619014-6e9bfdb5-4e95-4716-af91-48dbde093b1b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Register Citizen (Public)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nik\": \"3276012345670002\",\r\n  \"name\": \"rakha\",\r\n  \"email\": \"rakha@student.upnvj.ac.id\",\r\n  \"phone\": \"081299998888\",\r\n  \"zone_id\": 1\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/citizens",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citizens"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login (Public)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "password",
+              "type": "text",
+              "uuid": "1efc748c-4dcb-41cb-9d17-083494f348a6"
+            },
+            {
+              "key": "username",
+              "value": "fachri@student.upnvj.ac.id",
+              "type": "text",
+              "uuid": "d0914e2c-cb51-4139-8291-8224d973f2ac"
+            },
+            {
+              "key": "password",
+              "value": "password123",
+              "type": "text",
+              "uuid": "d5003497-aa98-49f2-9ea7-201247969555"
+            },
+            {
+              "key": "client_id",
+              "value": "citizen-app",
+              "type": "text",
+              "uuid": "aaecd2ca-814c-465c-bcf9-825c9c8bfc05"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/oauth/token",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "oauth",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Refresh token (Public)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "refresh_token",
+              "type": "text",
+              "uuid": "e6a85115-1c15-4278-8217-de48c0ca0b69"
+            },
+            {
+              "key": "refresh_token",
+              "value": "03fa05d72a734b4afee28f12770c42cac30ab32a13ebb4309c1feed03871cc02cf5b39877fdbccf5",
+              "type": "text",
+              "uuid": "9bb0f2f7-774c-4536-9abb-795721125c23"
+            },
+            {
+              "key": "client_id",
+              "value": "citizen-app",
+              "type": "text",
+              "uuid": "39ae237c-2457-41be-b0b7-78d0014cd65a"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/oauth/token",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "oauth",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Citizen (Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0MTMxNCwiZXhwIjoxNzgyNDQ0OTE0fQ.Oc21KRNYliGpaSdo6KIYVMUq40tUW1vg6h3pUFJHxlA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/citizens",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citizens"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Profile Citizen (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0ODE3NCwiZXhwIjoxNzgyNDUxNzc0fQ.ZgZW6yyvwVxUFBT5sH_9Q417KAiWei-IikO1DEi4Hhg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/citizens/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citizens",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Intronspect (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTY5Nzc5MCwiZXhwIjoxNzgxNzAxMzkwfQ.3zmT_tAwTFr_lj4s1API23f4EhBbeFeX1GYJoWO8-AE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0MDE2NSwiZXhwIjoxNzgyNDQzNzY1fQ.tJq1Mgx9od6AH6F_Jm6FheRJbDGDZcMiTVQQNo6r-ik",
+              "type": "text",
+              "uuid": "4da5bb4c-0493-4b85-8703-b39926505fb4"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/oauth/introspect",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "oauth",
+            "introspect"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Revoke (Admin & Citizen)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQwOTYyMSwiZXhwIjoxNzgyNDEzMjIxfQ.bLXesErt86eQdCoFtcxnCZUSz1wt_P-p0C6s_zNIoUo",
+              "type": "text",
+              "uuid": "2c7999c3-de61-4247-8c90-929555c6290e"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/oauth/revoke",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "oauth",
+            "revoke"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get reports  (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0MTMxNCwiZXhwIjoxNzgyNDQ0OTE0fQ.Oc21KRNYliGpaSdo6KIYVMUq40tUW1vg6h3pUFJHxlA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create reports (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"citizen_id\": 2,\r\n  \"category\": \"Kesehatan Paru\",\r\n  \"description\": \"Sesak napas setelah lari pagi.\",\r\n  \"zone_id\": 1\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reports",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get notifications (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0MTcwOCwiZXhwIjoxNzgyNDQ1MzA4fQ.bRznB1XVCLj9oDonczzUbFDW-fD43k_5WITM5AIZUkQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications?citizen_id=2",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "citizen_id",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get notifications by id (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications?citizen_id=2",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "citizen_id",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get zones (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0MjgxNiwiZXhwIjoxNzgyNDQ2NDE2fQ.Itr2OOoVDWj3Puw-XjD3amXBafJP2-mok_77PVQbQok",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/zones",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "zones"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Zones (Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Pondok Labu\",\r\n  \"city_district\": \"Jakarta Selatan\",\r\n  \"coordinates\": \"-6.300, 106.790\",\r\n  \"area_km2\": 15.5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/zones",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "zones"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update zones by id (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Pondok Labu 1\",\r\n  \"city_district\": \"Jakarta Selatan\",\r\n  \"coordinates\": \"-6.301, 106.790\",\r\n  \"area_km2\": 15.5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/zones/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "zones",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get alerts active (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/alerts/active",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "alerts",
+            "active"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get notifications read (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/1/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "1",
+            "read"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create alerts (Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"zone_id\": 1,\r\n  \"alert_type\": \"high_pm25\",\r\n  \"severity\": \"critical\", \r\n  \"message\": \"Udara sangat beracun! Kurangi aktivitas di luar.\",\r\n  \"value\": 150.5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/alerts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "alerts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Resolve Alerts (Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0ODE3NCwiZXhwIjoxNzgyNDUxNzc0fQ.ZgZW6yyvwVxUFBT5sH_9Q417KAiWei-IikO1DEi4Hhg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/alerts/1/resolve",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "alerts",
+            "1",
+            "resolve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create activity-sessions start (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"device_id\": \"smartwatch-fachri\",\r\n  \"zone_id\": 1,\r\n  \"heart_rate\": 80,\r\n  \"recorded_at\": \"2026-06-26 10:00:00\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/activity-sessions/start",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "activity-sessions",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create activity-sessions end (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"device_id\": \"smartwatch-fachri\",\r\n  \"recorded_at\": \"2026-06-26 11:00:00\",\r\n  \"avg_heart_rate\": 110,\r\n  \"max_heart_rate\": 140\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/activity-sessions/end",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "activity-sessions",
+            "end"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get latest sensor readings (Admin & Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/readings/latest",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "readings",
+            "latest"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create detect anomaly (System / Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"sensor_value\": 150.5,\r\n  \"timestamp_hour\": 14.5,\r\n  \"rolling_mean_1h\": 140.0,\r\n  \"z_score\": 2.5\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/detect/anomaly",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "detect",
+            "anomaly"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Predict temperature inversion (System / Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"temperature\": 20.0,\r\n  \"humidity\": 80.0,\r\n  \"wind_speed\": 1.0,\r\n  \"hour\": 23.0\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/context/inversion-index",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "context",
+            "inversion-index"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create predict toxic-dose (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pm25\": 150.0,\r\n  \"pm10\": 100.0,\r\n  \"co\": 10.0,\r\n  \"no2\": 5.0,\r\n  \"activity_intensity\": \"moderate_run\",\r\n  \"duration_minutes\": 60,\r\n  \"mask_type\": \"none\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict/toxic-dose",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "predict",
+            "toxic-dose"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Calculate lung impact (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"cumulative_toxic_load_score\": 45.5,\r\n  \"age\": 25,\r\n  \"asthma_history\": false,\r\n  \"weight_kg\": 65.0,\r\n  \"baseline_lung_capacity_pct\": 100.0\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict/lung-impact",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "predict",
+            "lung-impact"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Predict Full Exposur (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0NDAwNiwiZXhwIjoxNzgyNDQ3NjA2fQ.G8xmLk1UvecmS3NWDCyOnHy1WFodpD_oMRFpTHLM84c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"session_id\": 1,\r\n  \"pm25\": 150.0,\r\n  \"pm10\": 100.0,\r\n  \"co\": 10.0,\r\n  \"no2\": 5.0,\r\n  \"activity_intensity\": \"moderate_run\",\r\n  \"duration_minutes\": 60,\r\n  \"mask_type\": \"none\",\r\n  \"age\": 25,\r\n  \"asthma_history\": false,\r\n  \"weight_kg\": 65.0,\r\n  \"baseline_lung_capacity_pct\": 100.0\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict/full-exposure",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "predict",
+            "full-exposure"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Exposures (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0ODE3NCwiZXhwIjoxNzgyNDUxNzc0fQ.ZgZW6yyvwVxUFBT5sH_9Q417KAiWei-IikO1DEi4Hhg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/citizens/exposures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citizens",
+            "exposures"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Latest Exposure (Citizen)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjbGllbnRfaWQiOiJjaXRpemVuLWFwcCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjQ0ODE3NCwiZXhwIjoxNzgyNDUxNzc0fQ.ZgZW6yyvwVxUFBT5sH_9Q417KAiWei-IikO1DEi4Hhg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/citizens/exposures/latest",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citizens",
+            "exposures",
+            "latest"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

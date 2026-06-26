@@ -24,6 +24,6 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8002
 
-# Saat container start: drop & migrate fresh + serve
-CMD php artisan migrate:fresh --force --seed && \
+# Saat container start: migrate + serve
+CMD php artisan migrate --force && \
     php -S 0.0.0.0:8002 -t public

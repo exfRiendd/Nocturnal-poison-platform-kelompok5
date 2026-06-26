@@ -7,6 +7,7 @@ const { globalLimiter } = require('./src/middlewares/rate-limiter');
 const proxyRouter = require('./src/routes/proxy');
 const { register } = require('./src/config/metrics');
 const metricsCollector = require('./src/middlewares/metrics-collector');
+const verifyToken = require('./src/middlewares/auth');
 
 dotenv.config();
 
@@ -18,9 +19,19 @@ app.use(morgan('combined'));
 app.use(metricsCollector);
 app.use(globalLimiter);
 
+app.use((req, res, next) => {
+  req.headers['accept'] = 'application/json';
+  next();
+});
+
+const roleValidator = require('./src/middlewares/role-validator');
+
+app.use(verifyToken);
+app.use(roleValidator);
+
 app.get('/health', async (req, res) => {
   const services = [
-    { name: 'oauth-server', url: process.env.OAUTH_SERVER_URL }, 
+    { name: 'oauth-server', url: process.env.OAUTH_SERVER_URL },
     { name: 'citizen-service', url: process.env.CITIZEN_SERVICE_URL },
     { name: 'env-service', url: process.env.ENV_SERVICE_URL },
     { name: 'python-ml', url: process.env.PYTHON_ML_URL },
