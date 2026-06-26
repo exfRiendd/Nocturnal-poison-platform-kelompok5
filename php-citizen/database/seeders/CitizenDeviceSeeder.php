@@ -15,15 +15,15 @@ class CitizenDeviceSeeder extends Seeder
     {
         DB::table('citizen_devices')->insert([
             [
-                'device_id' => 'wearable-001',
+                'device_id' => 'device_01',
                 'citizen_id' => 1,
-                'device_label' => 'Smart Band Admin',
+                'device_label' => 'Smart Band 1',
                 'status' => 'active'
             ],
             [
-                'device_id' => 'wearable-002',
+                'device_id' => 'device_02',
                 'citizen_id' => 2,
-                'device_label' => 'Smart Band Citizen',
+                'device_label' => 'Smart Band 2',
                 'status' => 'active'
             ]
         ]);
