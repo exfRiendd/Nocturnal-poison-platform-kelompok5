@@ -21,8 +21,14 @@ class CitizenController extends Controller
             'email' => 'nullable|email|unique:citizen_citizens,email|max:100',
             'phone' => 'nullable|string|max:20',
             'zone_id' => 'nullable|exists:zones,id',
-            'password' => 'nullable|string' 
+            'age' => 'nullable|integer|min:1|max:120',
+            'weight_kg' => 'nullable|numeric|min:1|max:500',
+            'mask_type' => 'nullable|in:none,cloth,medical,n95',
+            'password' => 'required|string' 
         ]);
+
+        // Hash password menggunakan Bcrypt agar cocok dengan Node.js oauth-server
+        $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
 
         $citizen = Citizen::create($validated);
 
