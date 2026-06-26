@@ -38,7 +38,7 @@ CREATE TABLE citizen_citizens (
     nik VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE,
-    password VARCHAR(255) NOT NULL DEFAULT '$2b$10$EPF96bA/f.ZqE7nfxbN7E.S1S0P3E8yM1kQ2w3e4r5t6y7u8i9o0p', -- Default hash 'password123'
+    password VARCHAR(255) NOT NULL DEFAULT '$2b$10$WfZLgdNrLCjktxdOsskbAuU9OiKZD7.NMkQO3ErdUXvEmJmb.gHiG', -- Default hash 'password123'
     phone VARCHAR(20),
     zone_id INT,
     role ENUM('citizen', 'admin') DEFAULT 'citizen',
@@ -243,6 +243,7 @@ CREATE TABLE env_alerts (
     zone_id INT,
     alert_type VARCHAR(100) NOT NULL,
     severity ENUM('low', 'medium', 'high', 'critical') NOT NULL,
+    message TEXT,
     value DECIMAL(10,2),
     threshold DECIMAL(10,2),
     resolved_at TIMESTAMP NULL,
