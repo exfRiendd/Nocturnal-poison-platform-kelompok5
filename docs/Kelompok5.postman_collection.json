@@ -22,12 +22,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/citizens",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/citizens",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "citizens"
@@ -71,12 +69,10 @@
           ]
         },
         "url": {
-          "raw": "http://localhost:3000/oauth/token",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/oauth/token",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "oauth",
             "token"
@@ -114,12 +110,10 @@
           ]
         },
         "url": {
-          "raw": "http://localhost:3000/oauth/token",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/oauth/token",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "oauth",
             "token"
@@ -144,12 +138,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/citizens",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/citizens",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "citizens"
@@ -174,12 +166,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/citizens/1",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/citizens/1",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "citizens",
@@ -216,12 +206,10 @@
           ]
         },
         "url": {
-          "raw": "http://localhost:3000/oauth/introspect",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/oauth/introspect",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "oauth",
             "introspect"
@@ -247,12 +235,10 @@
           ]
         },
         "url": {
-          "raw": "http://localhost:3000/oauth/revoke",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/oauth/revoke",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "oauth",
             "revoke"
@@ -277,12 +263,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/reports",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/reports",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "reports"
@@ -316,12 +300,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/reports",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/reports",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "reports"
@@ -352,12 +334,10 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/api/notifications?citizen_id=2",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/notifications?citizen_id=2",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "notifications"
@@ -388,12 +368,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/notifications?citizen_id=2",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/notifications?citizen_id=2",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "notifications"
@@ -431,12 +409,10 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/api/zones",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/zones",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "zones"
@@ -470,12 +446,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/zones",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/zones",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "zones"
@@ -509,12 +483,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/zones/1",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/zones/1",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "zones",
@@ -540,12 +512,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/alerts/active",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/alerts/active",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "alerts",
@@ -580,12 +550,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/notifications/1/read",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/notifications/1/read",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "notifications",
@@ -628,12 +596,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/alerts",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/alerts",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "alerts"
@@ -667,12 +633,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/alerts/1/resolve",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/alerts/1/resolve",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "alerts",
@@ -708,12 +672,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/activity-sessions/start",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/activity-sessions/start",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "activity-sessions",
@@ -748,12 +710,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/activity-sessions/end",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/activity-sessions/end",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "activity-sessions",
@@ -779,12 +739,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/readings/latest",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/readings/latest",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "readings",
@@ -819,12 +777,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/detect/anomaly",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/detect/anomaly",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "detect",
             "anomaly"
@@ -858,12 +814,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/context/inversion-index",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/context/inversion-index",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "context",
             "inversion-index"
@@ -897,12 +851,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/predict/toxic-dose",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/predict/toxic-dose",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "predict",
             "toxic-dose"
@@ -936,12 +888,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/predict/lung-impact",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/predict/lung-impact",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "predict",
             "lung-impact"
@@ -975,12 +925,10 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/predict/full-exposure",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/predict/full-exposure",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "predict",
             "full-exposure"
@@ -1005,12 +953,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/citizens/exposures",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/citizens/exposures",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "citizens",
@@ -1036,12 +982,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/citizens/exposures/latest",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/api/citizens/exposures/latest",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "3000",
           "path": [
             "api",
             "citizens",
