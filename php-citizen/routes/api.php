@@ -42,7 +42,7 @@ Route::prefix('activity-sessions')->group(function () {
 });
 
 
-// Citizen Endpoints
+// Citizen & Device Endpoints
 
 Route::middleware('citizen.auth')->group(function () {
 
@@ -59,5 +59,10 @@ Route::middleware('citizen.auth')->group(function () {
     Route::post(
         '/citizens/devices',
         [CitizenDeviceController::class, 'store']
+    );
+
+    Route::get(
+        '/citizens/devices',
+        [CitizenDeviceController::class, 'index']
     );
 });

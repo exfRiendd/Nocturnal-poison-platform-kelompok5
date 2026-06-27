@@ -34,4 +34,21 @@ class CitizenDeviceController extends Controller
             'data'    => $device
         ], 201);
     }
+
+    public function index(Request $request)
+    {
+        // 1. Ambil citizen_id yang sudah disisipkan oleh middleware JWT
+        $citizenId = $request->input('citizen_id');
+
+        // 2. Ambil data device milik citizen tertentu
+        $devices = CitizenDevice::where('citizen_id', $citizenId)
+            ->select('device_id', 'device_label', 'status') 
+            ->get();
+
+        // 3. Kembalikan respon JSON
+        return response()->json([
+            'message' => 'Success fetching citizen devices',
+            'data'    => $devices
+        ], 200);
+    }
 }
