@@ -6,6 +6,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ActivitySessionController;
 use App\Http\Controllers\HealthExposureController;
+use App\Http\Controllers\CitizenDeviceController;
 
 Route::prefix('citizens')->group(function () {
     Route::get('/', [CitizenController::class, 'index']);
@@ -53,5 +54,10 @@ Route::middleware('citizen.auth')->group(function () {
     Route::get(
         '/citizens/exposures/latest',
         [HealthExposureController::class, 'latest']
+    );
+
+    Route::post(
+        '/citizens/devices',
+        [CitizenDeviceController::class, 'store']
     );
 });
