@@ -8,9 +8,11 @@ WOKWI_PORT = 1883
 WOKWI_TOPIC_ENV = "smartcity/environment/+/sensor"
 WOKWI_TOPIC_HR = "wearable/+/heartrate"
 
+import os
+
 # Konfigurasi Lokal (Tujuan Data)
-LOCAL_BROKER = "mosquitto"  # service name inside Docker network
-LOCAL_PORT = 1883
+LOCAL_BROKER = os.environ.get("MQTT_HOST", "mosquitto")
+LOCAL_PORT = int(os.environ.get("MQTT_PORT", 1883))
 
 # Threshold
 AQI_DANGER = 200
