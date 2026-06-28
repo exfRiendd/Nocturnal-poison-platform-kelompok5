@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "author": "Kelompok 5 - Device 3: Stasiun Udara Kampus",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 20, "left": 20, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -60, "left": 320, "attrs": { "humidity": "75", "temperature": "28" } },
+    { "type": "wokwi-slide-potentiometer", "id": "pot1", "top": 160, "left": 320, "attrs": { "value": "0.5" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 260, "left": 20, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r2", "top": 260, "left": 80, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-led", "id": "led-red",   "top": 300, "left": 10, "attrs": { "color": "red" } },
+    { "type": "wokwi-led", "id": "led-green", "top": 300, "left": 70, "attrs": { "color": "green" } }
+  ],
+  "connections": [
+    ["esp:TX0", "$serialMonitor:RX", "", []],
+    ["esp:RX0", "$serialMonitor:TX", "", []],
+
+    ["esp:D4",    "dht1:SDA", "green",  []],
+    ["esp:3V3",   "dht1:VCC", "red",    []],
+    ["esp:GND.1", "dht1:GND", "black",  []],
+
+    ["pot1:GND", "esp:GND.2", "black", []],
+    ["pot1:VCC", "esp:3V3",   "red",   []],
+    ["pot1:SIG", "esp:D34",   "blue",  []],
+
+    ["esp:D25",   "r1:1",      "orange", []],
+    ["r1:2",      "led-red:A", "orange", []],
+    ["led-red:C", "esp:GND.3", "black",  []],
+
+    ["esp:D26",    "r2:1",       "lime", []],
+    ["r2:2",       "led-green:A","lime",  []],
+    ["led-green:C","esp:GND.1",  "black", []]
+  ],
+  "dependencies": {}
+}
