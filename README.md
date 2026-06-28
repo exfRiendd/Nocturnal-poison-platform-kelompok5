@@ -6,7 +6,7 @@
 |---|---|---|
 | Alysha Ananda Shafa | 2410511087 | IoT Engineer & System Integrator |
 | Syahdewa Maulana | 2410511095 | ML Engineer (Ketua Kelompok) |
-| Muhammad Fachri Wiryansyah | 24105110**__** | Backend Developer (PHP/Laravel) |
+| Muhammad Fachri Wiryansyah | 2410511096 | Backend Developer (PHP/Laravel) |
 | Rakha Dwi Prayoga | 2410511072 | Backend Developer (API Gateway & Auth) |
 | Valkryie | 24105110**__** | Backend Developer (Citizen Service) |
 
