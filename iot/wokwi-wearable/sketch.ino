@@ -12,7 +12,7 @@ const char* password = "";
 #define LED_MERAH   25  // LED merah = HR tinggi (running)
 #define LED_HIJAU   26  // LED hijau = HR normal (rest/walking)
 
-const int   CITIZEN_ID = 12;
+const int   CITIZEN_ID = 3;
 const char* DEVICE_ID  = "device_01";
 
 WiFiClient espClient;
@@ -96,7 +96,7 @@ void loop() {
 
     // Kirim ke MQTT
     if (!mqtt.connected()) {
-        mqtt.connect("ESP32-Wearable-Citizen12");
+        mqtt.connect("ESP32-Wearable-Citizen3");
     }
     mqtt.loop();
 
