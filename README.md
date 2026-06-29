@@ -8,7 +8,7 @@
 | Syahdewa Maulana | 2410511095 | ML Engineer (Ketua Kelompok) |
 | Muhammad Fachri Wiryansyah | 2410511096 | Backend Developer (PHP/Laravel) |
 | Rakha Dwi Prayoga | 2410511072 | Backend Developer (API Gateway & Auth) |
-| Valkryie | 24105110**__** | Backend Developer (Citizen Service) |
+| Piere Valkyrie | 2410511152 | Backend Developer (Citizen Service) |
 
 
 ---
